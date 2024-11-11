@@ -18,3 +18,30 @@ app.get("/", (req, res) => {
 app.listen(PORT , () => {
   console.log(`Server is running on port  http://localhost:${PORT}`);
 });
+
+
+
+// <======================================== NOTES START ==============================================>
+
+
+  //framework :  "express" for server
+  // libraries :  "express" for server , "argon2" for password hashing , "jsonwebtoken" for jwt , "prisma" for database
+  // Read the documentaion in their respective sites for the above mentioned libraries before making changes in the code.
+  // To run the code: npm start
+  // First install all dependencies :- npm intsall
+  // Then run the code :- npm start
+
+  // created date : 11-NOV-2024 || created by : Murthasa Ali  || module : 1 ||
+
+  // Technical summary(Pre-setups) created date/by :  Gurudas P R ||
+  // Domain :   || 
+  // Hosting :   ||
+  // SSL :   ||
+  // Database :  || Thasleem
+
+  // Phase summary :   || created date/by :  Ali  || Gurudas P R || Thasleem ||
+  // Phase 1 :  SetUps ||
+  // Phase 2 :  Development/ Api Creation|
+  // Phase 3 :  Production  ||
+
+  // <======================================== NOTES END ==============================================>
