@@ -121,7 +121,7 @@ export const login = async (req, res) => {
 export const changePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
     const email = req.user.email;
-    console.log(email)
+
     // Ensure all fields are provided
     if (!currentPassword || !newPassword || !confirmNewPassword) {
         return res.status(400).json({
@@ -152,7 +152,7 @@ export const changePassword = async (req, res) => {
         // Check if the password matches
         const isPasswordCorrect = await argon2.verify(user.password, currentPassword);
         if (!isPasswordCorrect) {
-            return res.status(400).json({ message: "Invalid email or password", success: false });
+            return res.status(400).json({ message: "Incorrect current password", success: false });
         }
         const isNotCurrentPassword = await argon2.verify(user.password, newPassword);
 
@@ -266,15 +266,7 @@ export const verifyOtp = async (req, res) => {
     }
 
     try {
-        // Find the user in the database
-        const user = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        });
-        if (!user) {
-            return res.status(400).json({ message: "There is no account related to this email", success: false });
-        }
+        
 
         // Check if OTP exists for this email
         const existingOTP = await prisma.otp.findUnique({
