@@ -1,8 +1,0 @@
-model ContactInfo {
-  id        String   @id @default(uuid())
-  email     String
-  phone     String
-  address   String   @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-} 

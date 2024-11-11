@@ -1,5 +1,5 @@
 model Blog {
-  id        String   @id
+  id        String   @id @default(uuid())
   title     String
   author    String
   date      DateTime
