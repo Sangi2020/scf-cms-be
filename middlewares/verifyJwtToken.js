@@ -26,7 +26,7 @@ const verifyJwtToken = (req, res, next) => {
         next();
       } catch (err) {
         // Internal server error
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(403).json({ message: "Forbidden: Invalid token" });
       }
     };
 
