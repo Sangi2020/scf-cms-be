@@ -16,7 +16,7 @@ export const createContactEnquiry = async (req, res) => {
 
     try {
         // Create new contact enquiry
-        const contact = await prisma.Enquiries.create({
+        const contact = await prisma.enquiries.create({
             data: {
                 id: uuidv4(),
                 name,
