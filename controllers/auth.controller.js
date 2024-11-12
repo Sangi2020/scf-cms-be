@@ -3,6 +3,8 @@ import * as argon2 from "argon2";
 import generateJwtToken from "../utils/generateJwtToken.js";
 import { PrismaClient } from "@prisma/client";
 import generateOTP from "../utils/generateOtp.js";
+import { sendEmail } from "../service/email/emailService,js";
+import { emailTemplates } from "../service/email/emailService,js";
 
 
 const prisma = new PrismaClient();
@@ -173,10 +175,19 @@ export const changePassword = async (req, res) => {
             },
         });
 
+        // Send email to user
+
+
+
         // Respond with success message
-        return res.status(200).json({
+        res.status(200).json({
             message: 'Password changed successfully',
             success: true,
+        });
+        await sendEmail({
+            to: req.user.email,
+            subject: "Password Change Notification",
+            html: emailTemplates.passwordChange(req.user.name || 'Valued User')
         });
 
     }
@@ -200,7 +211,7 @@ export const forgotPassword = async (req, res) => {
                 email,
             },
         });
-         if (!user) {
+        if (!user) {
             return res.status(200).json({
                 success: true,
                 message: 'If an account exists with this email, you will receive a reset code'
@@ -226,8 +237,8 @@ export const forgotPassword = async (req, res) => {
                 data: {
                     otp: otp,
                     expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-                    isVerified : false
-                    
+                    isVerified: false
+
                 },
             });
         } else {
@@ -236,7 +247,7 @@ export const forgotPassword = async (req, res) => {
                     email: email,
                     otp: otp,
                     expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-                    isVerified : false
+                    isVerified: false
                 },
             });
         }
@@ -246,10 +257,17 @@ export const forgotPassword = async (req, res) => {
 
         // await sendEmail(user.email, message);
 
+
+
         // Respond with success message
-        return res.status(200).json({
+        res.status(200).json({
             message: 'OTP sent successfully',
             success: true,
+        });
+        await sendEmail({
+            to: email,
+            subject: "Password Reset OTP - AshFlix",
+            html: emailTemplates.sendOTP(user.name, otp)
         });
     } catch (error) {
         console.error('Error during password change:', error);
@@ -266,7 +284,7 @@ export const verifyOtp = async (req, res) => {
     }
 
     try {
-        
+
 
         // Check if OTP exists for this email
         const existingOTP = await prisma.otp.findUnique({
@@ -284,7 +302,7 @@ export const verifyOtp = async (req, res) => {
             return res.status(400).json({ message: "OTP has expired", success: false });
         }
         // Check if OTP is expired
-        if (existingOTP.expiresAt < new Date())  {
+        if (existingOTP.expiresAt < new Date()) {
             return res.status(400).json({ message: "OTP has expired", success: false });
         }
 
@@ -298,7 +316,7 @@ export const verifyOtp = async (req, res) => {
                 email: email,
             },
             data: {
-                isVerified : true
+                isVerified: true
             },
         });
 
@@ -317,24 +335,24 @@ export const resetPassword = async (req, res) => {
 
     try {
 
-    if (!email || !newPassword || !confirmNewPassword) {
-        return res.status(400).json({
-            message: "Please provide all the required fields",
-            success: false,
-        });
-    }
+        if (!email || !newPassword || !confirmNewPassword) {
+            return res.status(400).json({
+                message: "Please provide all the required fields",
+                success: false,
+            });
+        }
 
-    // Ensure passwords match
-    if (newPassword !== confirmNewPassword) {
-        return res.status(400).json({
-            message: "New passwords do not match",
-            success: false,
-        });
-    }
+        // Ensure passwords match
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json({
+                message: "New passwords do not match",
+                success: false,
+            });
+        }
         const isOtpVerified = await prisma.otp.findUnique({
             where: {
                 email: email,
-                isVerified : true
+                isVerified: true
             },
         });
 
@@ -344,7 +362,7 @@ export const resetPassword = async (req, res) => {
                 success: false,
             });
         }
-    
+
 
         // Find the user in the database
         const user = await prisma.user.findUnique({
@@ -373,9 +391,14 @@ export const resetPassword = async (req, res) => {
             },
         });
 
-        return res.status(200).json({
+        res.status(200).json({
             message: 'Password reset successfully',
             success: true,
+        });
+        sendEmail({
+            to: user.email,
+            subject: "Password Reset Successful",
+            html: emailTemplates.passwordResetSuccess(user.name)
         });
     } catch (error) {
         console.error('Error during password reset:', error);
