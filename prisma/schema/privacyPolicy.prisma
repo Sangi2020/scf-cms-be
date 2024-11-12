@@ -1,8 +1,0 @@
-model PrivacyPolicy {
-  id        String   @id @default(uuid())
-  title     String
-  content   String   @db.Text
-  order     Int      @db.Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-} 

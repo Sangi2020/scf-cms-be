@@ -3,6 +3,7 @@ import 'dotenv/config';
 import authRoutes from "./routes/auth.routes.js";
 import blogRoutes from "./routes/blog.routes.js";
 import enquiriesRoutes from "./routes/enquiries.routes.js";
+import newsletterRoutes from "./routes/newsletter.routes.js";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/blog", blogRoutes);
 app.use("/api/v1/enquiries", enquiriesRoutes);
+app.use("/api/v1/newsletter", newsletterRoutes);
 
 app.get("/", (req, res) => {
   res.send("SCF RUNNING");
