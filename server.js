@@ -7,6 +7,7 @@ import contentsRoutes from "./routes/contents.routes.js";
 import privacyPolicyRoutes from "./routes/contents.routes.js";
 import teamRoutes from "./routes/team.routes.js";
 import qnaRoutes from "./routes/qna.routes.js";
+import clientRoutes from "./routes/client.routes.js";
 const PORT = process.env.PORT;
 const app = express();
 
@@ -20,8 +21,9 @@ app.use("/api/v1/enquiries", enquiriesRoutes);
 app.use("/api/v1/contents", contentsRoutes);
 app.use("/api/v1/privacy-policy", privacyPolicyRoutes);
 app.use("/api/v1/team", teamRoutes);
-
 app.use("/api/v1/qna", qnaRoutes);
+app.use("/api/v1/client", clientRoutes);
+
 app.get("/", (req, res) => {
   res.send("SCF RUNNING");
 });
