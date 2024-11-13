@@ -9,7 +9,7 @@ cloudinary.v2.config({
 });
 
 // Image upload function
-const imageUpload = async (file, folderPath) => {
+const imageUploadToCloudinary = async (file, folderPath) => {
     try {
         if (!file) {
             throw new Error("No image file provided.");
@@ -17,7 +17,7 @@ const imageUpload = async (file, folderPath) => {
 
         // Convert the file buffer to base64
         const b64 = Buffer.from(file.buffer).toString("base64");
-        const image = "data:" + file.mimetype + ";base64," + b64;
+        const image = `data:${file.mimetype};base64,${b64}`;
 
         // Upload to Cloudinary
         const result = await cloudinary.v2.uploader.upload(image, {
@@ -26,7 +26,7 @@ const imageUpload = async (file, folderPath) => {
             resource_type: "auto",
         });
 
-        // Return result
+        // Return the uploaded image's URL and details
         return result;
     } catch (error) {
         console.error('Error during image upload:', error);
@@ -34,23 +34,17 @@ const imageUpload = async (file, folderPath) => {
     }
 };
 
-export default imageUpload
+// Reusable function to delete image from Cloudinary
+const deleteImageFromCloudinary = async (publicId) => {
+    try {
+        // Delete image from Cloudinary using publicId
+        const result = await cloudinary.v2.uploader.destroy(publicId);
+        return result;
+    } catch (error) {
+        console.error('Error deleting image from Cloudinary:', error);
+        throw new Error('Could not delete image from Cloudinary');
+    }
+};
 
+export { imageUploadToCloudinary, deleteImageFromCloudinary };  // Export both functions
 
-
-// Example usage:
-
-
-
-// if (!req.file) {
-//     return res.status(400).json({ message: 'No image provided', success: false });
-// }
-
-// const folderPath = 'scf/logo';  // Specify your folder path here
-// const result = await imageUpload(req.file, folderPath);
-// console.log(result.secure_url);
-// return res.status(200).json({
-//     message: 'Image uploaded successfully',
-//     success: true,
-//     imageUrl: result.secure_url
-// });
