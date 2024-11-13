@@ -1,6 +1,6 @@
 import express from "express";
-import { createContactEnquiry } from "../controllers/enquiries.controller.js";
-import { subscribeToNewsletter, unsubscribeFromNewsletter } from "../controllers/enquiries.controller.js";
+import { createContactEnquiry } from "../../controllers/enquiries.controller.js";
+import { subscribeToNewsletter, unsubscribeFromNewsletter } from "../../controllers/enquiries.controller.js";
 
 const router = express.Router();
 

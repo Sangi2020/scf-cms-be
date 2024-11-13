@@ -1,6 +1,6 @@
 import express from "express";
-import { createFAQ, getAllFAQs, updateFAQ, deleteFAQ } from "../controllers/faq.controller.js";
-import verifyJwtToken from "../middlewares/verifyJwtToken.js";
+import { createFAQ, getAllFAQs, updateFAQ, deleteFAQ } from "../../controllers/faq.controller.js";
+import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
 
 const router = express.Router();
 

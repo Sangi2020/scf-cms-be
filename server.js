@@ -1,28 +1,52 @@
 import express from "express";
 import 'dotenv/config';
-import authRoutes from "./routes/auth.routes.js";
-import blogRoutes from "./routes/blog.routes.js";
-import enquiriesRoutes from "./routes/enquiries.routes.js";
-import contentsRoutes from "./routes/contents.routes.js";
-import privacyPolicyRoutes from "./routes/contents.routes.js";
-import teamRoutes from "./routes/team.routes.js";
-import qnaRoutes from "./routes/qna.routes.js";
-import clientRoutes from "./routes/client.routes.js";
+
+// admin routes
+import authRoutes from "./routes/admin/auth.routes.js";
+import adminBlogRoutes from "./routes/admin/blog.routes.js";
+import adminEnquiriesRoutes from "./routes/admin/enquiries.routes.js";
+import adminContentsRoutes from "./routes/admin/contents.routes.js";
+import adminTeamRoutes from "./routes/admin/team.routes.js";
+import adminQnaRoutes from "./routes/admin/qna.routes.js";
+import adminClientRoutes from "./routes/admin/client.routes.js";
+
+// web routes
+import webBlogRoutes from "./routes/web/blog.routes.js";
+import webEnquiriesRoutes from "./routes/web/enquiries.routes.js";
+import webContentsRoutes from "./routes/web/contents.routes.js";
+import webTeamRoutes from "./routes/web/team.routes.js";
+import webQnaRoutes from "./routes/web/qna.routes.js";
+import webClientRoutes from "./routes/web/client.routes.js";
 const PORT = process.env.PORT;
 const app = express();
 
 
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/blog", blogRoutes);
-app.use("/api/v1/enquiries", enquiriesRoutes);
-app.use("/api/v1/contents", contentsRoutes);
-app.use("/api/v1/privacy-policy", privacyPolicyRoutes);
-app.use("/api/v1/team", teamRoutes);
-app.use("/api/v1/qna", qnaRoutes);
-app.use("/api/v1/client", clientRoutes);
+
+
+// admin routes
+app.use("/api/v1/admin/auth", authRoutes);
+app.use("/api/v1/admin/blog", adminBlogRoutes);
+app.use("/api/v1/admin/team", adminTeamRoutes);
+app.use("/api/v1/admin/client", adminEnquiriesRoutes);
+app.use("/api/v1/admin/contents", adminContentsRoutes);
+app.use("/api/v1/admin/client", adminClientRoutes);
+app.use("/api/v1/admin/qna", adminQnaRoutes);
+
+
+//web routes
+
+app.use("/api/v1/web/blog", webBlogRoutes);
+app.use("/api/v1/web/team", webTeamRoutes);
+app.use("/api/v1/web/client", webEnquiriesRoutes);
+app.use("/api/v1/web/contents", webContentsRoutes);
+app.use("/api/v1/web/client", webClientRoutes);
+app.use("/api/v1/web/qna", webQnaRoutes);
+
+
+
 
 app.get("/", (req, res) => {
   res.send("SCF RUNNING");

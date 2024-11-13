@@ -1,7 +1,7 @@
 import express from "express";
-import { createTestimonial, getAllTestimonials, updateTestimonial, deleteTestimonial } from "../controllers/testimonials.controller.js";
-import { createPrivacyPolicy, getAllPrivacyPolicies, updatePrivacyPolicy, deletePrivacyPolicy } from "../controllers/privacyPolicy.controller.js";
-import verifyJwtToken from "../middlewares/verifyJwtToken.js";
+import { createTestimonial, getAllTestimonials, updateTestimonial, deleteTestimonial } from "../../controllers/testimonials.controller.js";
+import { createPrivacyPolicy, getAllPrivacyPolicies, updatePrivacyPolicy, deletePrivacyPolicy } from "../../controllers/privacyPolicy.controller.js";
+import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
 
 const router = express.Router();
 

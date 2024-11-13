@@ -1,7 +1,7 @@
 import express from "express";
-import { createClient, getAllClients, updateClient, deleteClient } from "../controllers/client.controller.js";
-import upload from "../middlewares/upload.middleware.js";
-import verifyJwtToken from "../middlewares/verifyJwtToken.js";
+import { createClient, getAllClients, updateClient, deleteClient } from "../../controllers/client.controller.js";
+import upload from "../../middlewares/upload.middleware.js";
+import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
 
 const router = express.Router();
 

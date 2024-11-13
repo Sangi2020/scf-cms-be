@@ -58,3 +58,57 @@ export const addTeam = async (req, res) => {
     }
 };
 
+
+export const getActiveTeam = async (req, res) => {
+
+    try {
+        const team = await prisma.team.findMany({
+            where: {
+                isActive: true
+            },
+            orderBy: {
+                order: 'asc'
+            },
+            select: {
+                id: true,
+                name: true,
+                position: true,
+                image: true,
+                bio: true,
+                linkedin: true,
+                email: true,
+                order: true
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Team members fetched successfully.",
+            team: team
+        });
+    } catch (error) {
+
+    }
+}
+
+export const getAllTeam = async (req, res) => { 
+
+    try {
+        const team = await prisma.team.findMany()
+        return res.status(200).json({
+            success: true,
+            message: "Team members fetched successfully.",
+            team: team
+        });
+        
+    } catch (error) {
+        console.log(error ,"Error fetching team members");
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while fetching team members."
+        });
+        
+    }
+}
+
+ 
