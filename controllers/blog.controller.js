@@ -1,13 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
+import {deleteImageFromCloudinary, imageUploadToCloudinary} from "../helpers/image.upload.js";
 
 const prisma = new PrismaClient();
 
 export const createBlog = async (req, res) => {
-    const { title, author, date, image, excerpt, content } = req.body;
+    const { title, author, date, excerpt, content } = req.body;
+    if (!req.file) {
+        return res.status(400).json({ message: 'No image provided', success: false });
+    }
 
     // Validate required fields
-    if (!title || !author || !date || !image || !excerpt || !content) {
+    if (!title || !author || !date || !excerpt || !content) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
@@ -15,6 +19,9 @@ export const createBlog = async (req, res) => {
     }
 
     try {
+
+        const folderPath = 'scf/blogs';
+        const result = await imageUploadToCloudinary(req.file, folderPath);
         // Create new blog post
         const blog = await prisma.blog.create({
             data: {
@@ -22,7 +29,7 @@ export const createBlog = async (req, res) => {
                 title,
                 author,
                 date: new Date(date),
-                image,
+                image: result.secure_url,
                 excerpt,
                 content
             }
@@ -68,15 +75,18 @@ export const getAllBlogs = async (req, res) => {
 
 export const updateBlog = async (req, res) => {
     const { id } = req.params;
-    const { title, author, date, image, excerpt, content } = req.body;
+    const new_data = req.body;
 
     // Validate required fields
-    if (!title || !author || !date || !image || !excerpt || !content) {
+    if (!new_data.title || !new_data.author || !new_data.date || !new_data.excerpt || !new_data.content) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
         });
     }
+
+    // Ensure date is correctly formatted
+    new_data.date = new Date(new_data.date);  // Convert the date to a JavaScript Date object if it's in string format
 
     try {
         // Check if blog exists
@@ -91,17 +101,27 @@ export const updateBlog = async (req, res) => {
             });
         }
 
+        // If there's a new file uploaded
+        if (req.file) {
+            // Delete the old image from Cloudinary if it exists
+            if (existingBlog.image) {
+                const publicId = existingBlog.image.split('/').slice(7, -1).join('/') + '/' + existingBlog.image.split('/').pop().split('.')[0];
+                await deleteImageFromCloudinary(publicId);  // Delete the image from Cloudinary
+            }
+
+            // Upload the new image
+            const folderPath = 'scf/blogs';
+            const result = await imageUploadToCloudinary(req.file, folderPath);
+
+            new_data.image = result.secure_url;  // Update the image URL in the data to be saved
+        }
+
         // Update blog
         const updatedBlog = await prisma.blog.update({
             where: { id },
             data: {
-                title,
-                author,
-                date: new Date(date),
-                image,
-                excerpt,
-                content,
-                updatedAt: new Date()
+                ...new_data,
+                updatedAt: new Date()  // Automatically set the updated timestamp
             }
         });
 
@@ -135,6 +155,8 @@ export const deleteBlog = async (req, res) => {
                 message: "Blog not found"
             });
         }
+        const publicId = existingBlog.image.split('/').slice(7, -1).join('/') + '/' + existingBlog.image.split('/').pop().split('.')[0];
+        await deleteImageFromCloudinary(publicId);
 
         // Delete blog
         await prisma.blog.delete({

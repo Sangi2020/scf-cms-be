@@ -5,6 +5,7 @@ import blogRoutes from "./routes/blog.routes.js";
 import enquiriesRoutes from "./routes/enquiries.routes.js";
 import contentsRoutes from "./routes/contents.routes.js";
 import privacyPolicyRoutes from "./routes/contents.routes.js";
+import teamRoutes from "./routes/team.routes.js";
 const PORT = process.env.PORT;
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/api/v1/blog", blogRoutes);
 app.use("/api/v1/enquiries", enquiriesRoutes);
 app.use("/api/v1/contents", contentsRoutes);
 app.use("/api/v1/privacy-policy", privacyPolicyRoutes);
+app.use("/api/v1/team", teamRoutes);
 
 app.get("/", (req, res) => {
   res.send("SCF RUNNING");
