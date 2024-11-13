@@ -3,8 +3,8 @@ import * as argon2 from "argon2";
 import generateJwtToken from "../utils/generateJwtToken.js";
 import { PrismaClient } from "@prisma/client";
 import generateOTP from "../utils/generateOtp.js";
-import { sendEmail } from "../service/email/emailService,js";
-import { emailTemplates } from "../service/email/emailService,js";
+import { sendEmail } from "../helpers/email.js";
+import { emailTemplates } from "../helpers/email.js";
 
 
 const prisma = new PrismaClient();
@@ -220,7 +220,6 @@ export const forgotPassword = async (req, res) => {
         // generate otp and send it to user
 
         const otp = generateOTP();
-        console.log(otp)
 
         // Check if OTP exists for this email
         const existingOTP = await prisma.otp.findUnique({
