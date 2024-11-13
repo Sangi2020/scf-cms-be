@@ -1,6 +1,7 @@
 import express from "express";
-import { changePassword, forgotPassword, login, register, resetPassword, verifyOtp } from "../controllers/auth.controller.js";
+import { changePassword, forgotPassword, login, register, resetPassword,  verifyOtp } from "../controllers/auth.controller.js";
 import verifyjwtToken from "../middlewares/verifyJwtToken.js";
+import upload from "../middlewares/upload.middleware.js";
 
 
 
