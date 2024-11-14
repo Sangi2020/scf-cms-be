@@ -160,3 +160,50 @@ export const emailTemplates = {
 
 
 }
+
+
+
+
+
+// Newsletter template
+export const newsletterTemplate = (content) => {
+    return `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px; background-color: #f9f9f9;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #333; margin: 0; padding: 20px 0; border-bottom: 2px solid #eee;">Newsletter</h2>
+            </div>
+            
+            <div style="padding: 20px; color: #555; line-height: 1.5;">
+                ${content}
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #888; font-size: 14px; margin: 0;">Best regards,<br>SCF Team</p>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+                    <p style="color: #888; font-size: 12px; margin: 0;">
+                        To unsubscribe from our newsletter, 
+                        <a href="{unsubscribe_link}" style="color: #1a73e8; text-decoration: none;">click here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+// Send newsletter to a single recipient
+export const sendNewsletterEmail = async ({ to, subject, content }) => {
+    try {
+        const mailOptions = {
+            from: process.env.FROM_MAIL_ID,
+            to,
+            subject,
+            html: newsletterTemplate(content)
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        return true;
+    } catch (error) {
+        console.error('Error sending newsletter:', error);
+        throw error;
+    }
+};
