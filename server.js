@@ -10,6 +10,7 @@ import adminTeamRoutes from "./routes/admin/team.routes.js";
 import adminQnaRoutes from "./routes/admin/qna.routes.js";
 import adminClientRoutes from "./routes/admin/client.routes.js";
 import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
+import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
 
 // web routes
 import webBlogRoutes from "./routes/web/blog.routes.js";
@@ -19,6 +20,7 @@ import webTeamRoutes from "./routes/web/team.routes.js";
 import webQnaRoutes from "./routes/web/qna.routes.js";
 import webClientRoutes from "./routes/web/client.routes.js";
 import webCatalogueRoutes from "./routes/web/catalogue.routes.js";
+import webNewsletterRoutes from "./routes/web/newsletter.routes.js";
 const PORT = process.env.PORT;
 const app = express();
 
@@ -37,6 +39,7 @@ app.use("/api/v1/admin/contents", adminContentsRoutes);
 app.use("/api/v1/admin/client", adminClientRoutes);
 app.use("/api/v1/admin/qna", adminQnaRoutes);
 app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
+app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
 
 
 //web routes
@@ -48,6 +51,7 @@ app.use("/api/v1/web/contents", webContentsRoutes);
 app.use("/api/v1/web/client", webClientRoutes);
 app.use("/api/v1/web/qna", webQnaRoutes);
 app.use("/api/v1/web/catalogue", webCatalogueRoutes);
+app.use("/api/v1/web/newsletter", webNewsletterRoutes);
 
 
 
