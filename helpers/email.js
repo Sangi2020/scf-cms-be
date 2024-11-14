@@ -166,23 +166,23 @@ export const emailTemplates = {
 
 
 // Newsletter template
-export const newsletterTemplate = (content) => {
+export const newsletterTemplate = (content, unsubscribeUrl, subject) => {
     return `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px; background-color: #f9f9f9;">
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 8px; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
             <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="color: #333; margin: 0; padding: 20px 0; border-bottom: 2px solid #eee;">Newsletter</h2>
+                <h2 style="color: #333; margin: 0; padding: 20px 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px; border-bottom: 3px solid #3498db;">${subject}</h2>
             </div>
             
-            <div style="padding: 20px; color: #555; line-height: 1.5;">
+            <div style="padding: 20px; color: #555; line-height: 1.7; font-size: 16px;">
                 ${content}
             </div>
 
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
                 <p style="color: #888; font-size: 14px; margin: 0;">Best regards,<br>SCF Team</p>
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
                     <p style="color: #888; font-size: 12px; margin: 0;">
-                        To unsubscribe from our newsletter, 
-                        <a href="{unsubscribe_link}" style="color: #1a73e8; text-decoration: none;">click here</a>
+                        If you no longer wish to receive our newsletter, 
+                        <a href="${unsubscribeUrl}" style="color: #3498db; text-decoration: none; font-weight: bold; cursor: pointer;">click here to unsubscribe</a>
                     </p>
                 </div>
             </div>
@@ -191,13 +191,13 @@ export const newsletterTemplate = (content) => {
 };
 
 // Send newsletter to a single recipient
-export const sendNewsletterEmail = async ({ to, subject, content }) => {
+export const sendNewsletterEmail = async ({ to, subject, content , unsubscribeUrl }) => {
     try {
         const mailOptions = {
             from: process.env.FROM_MAIL_ID,
             to,
             subject,
-            html: newsletterTemplate(content)
+            html: newsletterTemplate(content ,unsubscribeUrl ,subject)
         };
 
         const info = await transporter.sendMail(mailOptions);

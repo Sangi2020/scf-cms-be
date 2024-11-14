@@ -1,10 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
 import { sendNewsletterEmail } from "../helpers/email.js";
+import crypto from 'crypto';
 
 
 
 const prisma = new PrismaClient();
+ function generateunSubscribeToken(length = 32) {
+    return crypto.randomBytes(length).toString('hex');
+}
+
 export const subscribeToNewsletter = async (req, res) => {
     const { email } = req.body;
 
@@ -29,17 +34,21 @@ export const subscribeToNewsletter = async (req, res) => {
             });
         }
 
-        // Create new subscription
+        // Generate a unique unsubscribe token using the custom function
+        const unSubscribeToken = generateunSubscribeToken();  
+
+        // Create new subscription with unsubscribe token
         const subscription = await prisma.newsletter.create({
             data: {
                 id: uuidv4(),
-                email
+                email,
+                unSubscribeToken,  // Store the generated unsubscribe token
             }
         });
 
         return res.status(201).json({
             success: true,
-            message: "Successfully subscribed to newsletter",
+            message: "Successfully subscribed to the newsletter",
             data: subscription
         });
 
@@ -47,49 +56,52 @@ export const subscribeToNewsletter = async (req, res) => {
         console.error("Error subscribing to newsletter:", error);
         return res.status(500).json({
             success: false,
-            message: "Something went wrong while subscribing to newsletter"
+            message: "Something went wrong while subscribing to the newsletter"
         });
     }
 };
 
 export const unsubscribeFromNewsletter = async (req, res) => {
-    const { email } = req.body;
+    const { token } = req.query;
 
-    if (!email) {
+    // Check if the token is provided
+    if (!token) {
         return res.status(400).json({
             success: false,
-            message: "Email is required"
+            message: "Token is required"
         });
     }
 
     try {
-        // Check if subscription exists
-        const existingSubscription = await prisma.newsletter.findUnique({
-            where: { email }
+        // Find the subscriber using the token
+        const subscriber = await prisma.newsletter.findUnique({
+            where: { unSubscribeToken: token }
         });
 
-        if (!existingSubscription) {
+        // If the subscriber does not exist, return an error
+        if (!subscriber) {
             return res.status(404).json({
                 success: false,
-                message: "Email not found in newsletter subscription list"
+                message: "Subscriber not found"
             });
         }
 
-        // Delete subscription
+        // Delete the subscriber from the database
         await prisma.newsletter.delete({
-            where: { email }
+            where: { unSubscribeToken: token }
         });
 
+        // Respond with a success message
         return res.status(200).json({
             success: true,
-            message: "Successfully unsubscribed from newsletter"
+            message: "You have successfully unsubscribed from the newsletter"
         });
-
+        
     } catch (error) {
         console.error("Error unsubscribing from newsletter:", error);
         return res.status(500).json({
             success: false,
-            message: "Something went wrong while unsubscribing from newsletter"
+            message: "Something went wrong while unsubscribing"
         });
     }
 }; 
@@ -101,6 +113,7 @@ export const sendBulkNewsletter = async (req, res) => {
     const DELAY_BETWEEN_EMAILS = 1000; 
 
     try {
+        // Fetch all subscribers from the database
         const subscribers = await prisma.newsletter.findMany();
         
         if (!subscribers || subscribers.length === 0) {
@@ -123,14 +136,19 @@ export const sendBulkNewsletter = async (req, res) => {
             // Send to each subscriber in the batch
             for (const subscriber of batch) {
                 try {
+                    // Generate the unsubscribe URL with the token
+                    const unsubscribeUrl = `http://localhost:8080/api/v1/web/newsletter/unsubscribe?token=${subscriber.unSubscribeToken}`;
+
+                    // Replace the unsubscribe token placeholder in the content
+
                     await sendNewsletterEmail({
                         to: subscriber.email,
                         subject,
-                        content
+                        content,
+                        unsubscribeUrl
                     });
                     
                     results.successful.push(subscriber.email);
-                    console.log(`✅ Newsletter sent successfully to ${subscriber.email}`);
                     
                 } catch (error) {
                     results.failed.push({
@@ -173,3 +191,4 @@ export const sendBulkNewsletter = async (req, res) => {
         });
     }
 };
+
