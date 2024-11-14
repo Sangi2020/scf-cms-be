@@ -7,6 +7,6 @@ const router = express.Router();
 
 // Newsletter Routes
 router.post("/subscribe", subscribeToNewsletter);
-router.post("/unsubscribe", unsubscribeFromNewsletter);
+router.get("/unsubscribe", unsubscribeFromNewsletter);
 
 export default router; 
