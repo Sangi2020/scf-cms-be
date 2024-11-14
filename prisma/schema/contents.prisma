@@ -8,6 +8,10 @@ model Blog {
   content   String   @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([author])
+  @@index([createdAt])
 } 
 
 model Testimonial {
@@ -31,4 +35,8 @@ model Catalogue {
   order       Int      @db.Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+  @@index([order])
 } 
