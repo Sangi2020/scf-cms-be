@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/admin/auth", authRoutes);
 app.use("/api/v1/admin/blog", adminBlogRoutes);
 app.use("/api/v1/admin/team", adminTeamRoutes);
-app.use("/api/v1/admin/client", adminEnquiriesRoutes);
+app.use("/api/v1/admin/enquiries", adminEnquiriesRoutes);
 app.use("/api/v1/admin/contents", adminContentsRoutes);
 app.use("/api/v1/admin/client", adminClientRoutes);
 app.use("/api/v1/admin/qna", adminQnaRoutes);
@@ -43,7 +43,7 @@ app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
 
 app.use("/api/v1/web/blog", webBlogRoutes);
 app.use("/api/v1/web/team", webTeamRoutes);
-app.use("/api/v1/web/client", webEnquiriesRoutes);
+app.use("/api/v1/web/enquiries", webEnquiriesRoutes);
 app.use("/api/v1/web/contents", webContentsRoutes);
 app.use("/api/v1/web/client", webClientRoutes);
 app.use("/api/v1/web/qna", webQnaRoutes);
