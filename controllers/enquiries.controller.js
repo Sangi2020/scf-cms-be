@@ -177,26 +177,26 @@ export const getEnquirybyId = async (req, res) => {
 }
 
 
-// export const updateEnquiry = async (req, res) => {
-//     const { id } = req.params;
-//     try {
-//         const updatedEnquiry = await prisma.enquiries.update({
-//           where: { id },
-//           data: { status: 'read' },
-//         });
-//         return res.status(200).json({
-//           success: true,
-//           message: "Enquiry updated successfully",
-//           enquiry: updatedEnquiry,
-//         });
-//       } catch (error) {
-//         console.error("Error updating enquiry:", error);
-//         return res.status(500).json({
-//           success: false,
-//           message: "Something went wrong while updating enquiry",
-//         });
-//       } 
-// }
+export const updateEnquiry = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const updatedEnquiry = await prisma.enquiries.update({
+          where: { id },
+          data: { status: 'read' },
+        });
+        return res.status(200).json({
+          success: true,
+          message: "Enquiry updated successfully",
+          enquiry: updatedEnquiry,
+        });
+      } catch (error) {
+        console.error("Error updating enquiry:", error);
+        return res.status(500).json({
+          success: false,
+          message: "Something went wrong while updating enquiry",
+        });
+      } 
+}
 
 export const deleteEnquiry = async (req, res) => {
     const { id } = req.params;
