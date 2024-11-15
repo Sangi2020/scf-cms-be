@@ -87,8 +87,8 @@ app.listen(PORT , () => {
   // Database :  || Thasleem
 
   // Phase summary :   || created date/by :  Ali  || Gurudas P R || Thasleem ||
-  // Phase 1 :  SetUps ||
-  // Phase 2 :  Development/ Api Creation|
+  // Phase 1 :  SetUps || Gurudas
+  // Phase 2 :  Development/ Api Creation| Gurudas || Thasleem
   // Phase 3 :  Production  ||
 
   // <======================================== NOTES END ==============================================>
