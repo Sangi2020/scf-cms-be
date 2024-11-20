@@ -3,6 +3,8 @@ import 'dotenv/config';
 
 const analyticsDataClient = new BetaAnalyticsDataClient();
 
+
+
 const propertyId = 467519422;
 
 // Helper function to fetch data from GA4
