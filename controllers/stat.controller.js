@@ -225,3 +225,72 @@ export const fullPageData = async (req, res) => {
         });
     }
 };
+
+export const trafficSources = async (req, res) => {
+    try {
+        const dateRange = getDateRange(req);
+        const result = await fetchReport(
+            [
+                { name: 'sessions' },
+                { name: 'totalUsers' }
+            ],
+            [
+                { name: 'sessionDefaultChannelGroup' }  // GA4's default channel grouping
+            ],
+            dateRange
+        );
+
+        if (!result?.length) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'No traffic sources data found.' 
+            });
+        }
+
+        // Process data for all main traffic channels
+        const processedData = result.map(item => ({
+            channel: item.sessionDefaultChannelGroup,
+            sessions: parseInt(item.sessions),
+            users: parseInt(item.totalUsers)
+        })).filter(item => 
+            // Include all major traffic channels
+            [
+                'Organic Search',
+                'Paid Search', 
+                'Direct',
+                'Referral',
+                'Social',
+                'Email',
+                'Display',
+                'Affiliates'
+            ].includes(item.channel)
+        );
+
+        // Calculate total sessions for percentage
+        const totalSessions = processedData.reduce((sum, item) => sum + item.sessions, 0);
+
+        // Add percentage to each channel
+        const finalData = processedData.map(item => ({
+            ...item,
+            percentage: ((item.sessions / totalSessions) * 100).toFixed(1)
+        }));
+
+        // Sort by number of sessions descending
+        finalData.sort((a, b) => b.sessions - a.sessions);
+
+        res.json({ 
+            success: true, 
+            data: finalData,
+            summary: {
+                totalSessions,
+                totalUsers: finalData.reduce((sum, item) => sum + item.users, 0)
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching traffic sources data:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to fetch traffic sources data.' 
+        });
+    }
+};

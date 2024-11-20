@@ -1,5 +1,5 @@
 import express from "express";
-import { activeUsers, bounceRate, cityStats, countryAnalytics, engagedSessions, fullPageData, pageViewsByPage, totalPageViews } from "../../controllers/stat.controller.js";
+import { activeUsers, bounceRate, cityStats, countryAnalytics, engagedSessions, fullPageData, pageViewsByPage, totalPageViews, trafficSources } from "../../controllers/stat.controller.js";
 
 
 
@@ -14,6 +14,7 @@ router.get('/total-page-views',totalPageViews)
 router.get('/bounce-rate',bounceRate)
 router.get('/page-views-by-page',pageViewsByPage)
 router.get('/full-page-data',fullPageData)
+router.get('/traffic-sources',trafficSources)
 
 
 export default router;
