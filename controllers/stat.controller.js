@@ -298,6 +298,21 @@ export const trafficSources = async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
 export const totalEnquiries = async (req, res) => {
     try {
         const totalEnquiries = await prisma.enquiries.count();
