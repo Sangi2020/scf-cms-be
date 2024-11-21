@@ -12,6 +12,7 @@ import adminQnaRoutes from "./routes/admin/qna.routes.js";
 import adminClientRoutes from "./routes/admin/client.routes.js";
 import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
 import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
+import adminStatRoutes from "./routes/admin/stat.routes.js";
 
 // web routes
 import webBlogRoutes from "./routes/web/blog.routes.js";
@@ -44,6 +45,11 @@ app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
 app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
 
 
+//admin stats
+
+app.use("/api/v1/admin/stats", adminStatRoutes);
+
+
 //web routes
 
 app.use("/api/v1/web/blog", webBlogRoutes);
@@ -54,6 +60,8 @@ app.use("/api/v1/web/client", webClientRoutes);
 app.use("/api/v1/web/qna", webQnaRoutes);
 app.use("/api/v1/web/catalogue", webCatalogueRoutes);
 app.use("/api/v1/web/newsletter", webNewsletterRoutes);
+
+
 
 
 
