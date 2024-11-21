@@ -1,4 +1,6 @@
 import fetchReport from "../helpers/analytics.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 // Helper function to handle date range from request or default
 const getDateRange = (req) => {
@@ -294,3 +296,57 @@ export const trafficSources = async (req, res) => {
         });
     }
 };
+
+
+export const totalEnquiries = async (req, res) => {
+    try {
+        const totalEnquiries = await prisma.enquiries.count();
+
+        return res.status(200).json({
+            success: true,
+            data: totalEnquiries,
+        });
+    } catch (error) {
+        console.error("Error fetching total enquiries:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+
+export const totalNewsletterSubscribers = async (req, res) => {
+    try {
+        const totalSubscribers = await prisma.newsletter.count();
+
+        return res.status(200).json({
+            success: true,
+            data: totalSubscribers,
+        });
+    } catch (error) {
+        console.error("Error fetching total newsletter subscribers:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+
+export const totalBlogs = async (req, res) => {
+    try {
+      const totalBlogs = await prisma.blog.count();
+  
+      return res.status(200).json({
+        success: true,
+        data: totalBlogs,
+      });
+    } catch (error) {
+      console.error("Error fetching total blog count:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
