@@ -16,6 +16,9 @@ export const register = async (req, res) => {
     if (!name || !email || !password || !confirmPassword) {
         return res.status(400).json({ message: "Please provide all the required fields" });
     }
+    if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
 
     // Ensure passwords match
     if (password !== confirmPassword) {
@@ -128,6 +131,13 @@ export const changePassword = async (req, res) => {
     if (!currentPassword || !newPassword || !confirmNewPassword) {
         return res.status(400).json({
             message: "Please provide all the required fields",
+            success: false
+        });
+    }
+
+    if (newPassword.length < 6) {
+        return res.status(400).json({
+            message: "Password must be at least 6 characters long",
             success: false
         });
     }
@@ -339,6 +349,10 @@ export const resetPassword = async (req, res) => {
                 message: "Please provide all the required fields",
                 success: false,
             });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long", success: false });
         }
 
         // Ensure passwords match

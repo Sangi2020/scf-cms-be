@@ -1,5 +1,6 @@
 import express from "express";
 import 'dotenv/config';
+import cors from "cors";
 
 // admin routes
 import authRoutes from "./routes/admin/auth.routes.js";
@@ -12,6 +13,8 @@ import adminClientRoutes from "./routes/admin/client.routes.js";
 import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
 import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
 import adminSocialRoutes from "./routes/admin/social.routes.js";
+import adminStatRoutes from "./routes/admin/stat.routes.js";
+
 
 // web routes
 import webBlogRoutes from "./routes/web/blog.routes.js";
@@ -28,6 +31,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 
+app.use(cors('*')); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -46,6 +50,11 @@ app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
 app.use('/api/v1/admin/social', adminSocialRoutes);
 
 
+//admin stats
+
+app.use("/api/v1/admin/stats", adminStatRoutes);
+
+
 //web routes
 
 app.use("/api/v1/web/blog", webBlogRoutes);
@@ -57,6 +66,8 @@ app.use("/api/v1/web/qna", webQnaRoutes);
 app.use("/api/v1/web/catalogue", webCatalogueRoutes);
 app.use("/api/v1/web/newsletter", webNewsletterRoutes);
 app.use('/api/v1/web/social', webSocialRoutes);
+
+
 
 
 
@@ -90,8 +101,8 @@ app.listen(PORT , () => {
   // Database :  || Thasleem
 
   // Phase summary :   || created date/by :  Ali  || Gurudas P R || Thasleem ||
-  // Phase 1 :  SetUps ||
-  // Phase 2 :  Development/ Api Creation|
+  // Phase 1 :  SetUps || Gurudas
+  // Phase 2 :  Development/ Api Creation| Gurudas || Thasleem
   // Phase 3 :  Production  ||
 
   // <======================================== NOTES END ==============================================>
