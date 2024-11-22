@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/get-all-enquiries", getAllEnquiries);
 router.get("/get-enquiry/:id", getEnquirybyId);
-router.patch("/update-enquiry/:id/mark-read", updateEnquiry);
+router.patch("/update-status/:id", updateEnquiry);
 router.delete("/delete-enquiry/:id", deleteEnquiry);
 router.get("/export-enquiry", exportEnquiries);
 

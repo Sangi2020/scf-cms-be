@@ -58,11 +58,53 @@ export const createContactEnquiry = async (req, res) => {
 
 export const getAllEnquiries = async (req, res) => {
   try {
-    const enquiries = await prisma.enquiries.findMany();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const status = req.query.status; // 'read' or 'unread'
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+
+    const skip = (page - 1) * limit;
+
+    // Build filter conditions
+    let whereClause = {};
+    
+    if (status) {
+      whereClause.status = status;
+    }
+    
+    if (startDate && endDate) {
+      whereClause.createdAt = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
+    // Get total count for pagination
+    const totalCount = await prisma.enquiries.count({
+      where: whereClause,
+    });
+
+    // Get paginated results
+    const enquiries = await prisma.enquiries.findMany({
+      where: whereClause,
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
     return res.status(200).json({
       success: true,
       message: "Enquiries fetched successfully",
-      enquiries: enquiries
+      enquiries,
+      pagination: {
+        total: totalCount,
+        pages: Math.ceil(totalCount / limit),
+        currentPage: page,
+        limit,
+      }
     });
   } catch (error) {
     console.error("Error fetching enquiries:", error);
@@ -71,7 +113,7 @@ export const getAllEnquiries = async (req, res) => {
       message: "Something went wrong while fetching enquiries"
     });
   }
-}
+};
 
 export const getEnquirybyId = async (req, res) => {
   const { id } = req.params;
