@@ -1,6 +1,7 @@
 import express from "express";
 import 'dotenv/config';
 import cors from "cors";
+import { app, io, server } from './socket/socket.js'
 
 // admin routes
 import authRoutes from "./routes/admin/auth.routes.js";
@@ -29,8 +30,8 @@ import webNewsletterRoutes from "./routes/web/newsletter.routes.js";
 import webSocialRoutes from "./routes/web/social.routes.js";
 import webSeoRoutes from "./routes/web/seo.routes.js";
 
+
 const PORT = process.env.PORT;
-const app = express();
 
 
 app.use(cors('*')); 
@@ -81,7 +82,7 @@ app.get("/", (req, res) => {
   res.send("SCF RUNNING");
 });
 
-app.listen(PORT , () => {
+server.listen(PORT , () => {
   console.log(`Server is running on port  http://localhost:${PORT}`);
 });
 

@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
 import ExcelJS from 'exceljs';
-import sendFCMNotification from "../helpers/NotificationService.js"
-import initializeFirebase from '../helpers/firebaseConfig.js';
-initializeFirebase();
+import { createNotification } from "../helpers/createNotification.js";
+
+
 const prisma = new PrismaClient();
 
 export const createContactEnquiry = async (req, res) => {
@@ -29,11 +29,13 @@ export const createContactEnquiry = async (req, res) => {
       }
     });
 
-    const fcmToken = 'dg084TSLtBCD38MvYn-y9s:APA91bHMPWfp7mYdjqrS5PrPcLL6GtyBXVHxT-GWdA2ZEDsH2rwab2lnZ5QBthpGcxWAH8hRICwzjA27L0sL-l_8HnWGY3jT3g2wdGML0m2gkao8tqd9AN0'; 
-    const title = 'Hello!';
-    const notificationMessage = 'This is a notification sdfsfsdfsd .'; // Renamed to notificationMessage
-    await sendFCMNotification(fcmToken, title, notificationMessage);
+    const notificationMessage = `You have an enquiry from ${name}`;
+    await createNotification({
+      subject: 'New Contact Enquiry',
+      message: notificationMessage
+    });
 
+   
     return res.status(201).json({
       success: true,
       message: "Enquiry submitted successfully",
