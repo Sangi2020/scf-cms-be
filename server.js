@@ -14,7 +14,7 @@ import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
 import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
 import adminSocialRoutes from "./routes/admin/social.routes.js";
 import adminStatRoutes from "./routes/admin/stat.routes.js";
-import adminSeoRoutes from "./routes/admin/seo.routes.js";
+import adminEmailConfigRoutes from "./routes/admin/emailConfig.routes.js";
 
 
 // web routes
@@ -50,7 +50,8 @@ app.use("/api/v1/admin/qna", adminQnaRoutes);
 app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
 app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
 app.use('/api/v1/admin/social', adminSocialRoutes);
-app.use('/api/v1/admin/seo', adminSeoRoutes);
+app.use('/api/v1/admin/config', adminEmailConfigRoutes)
+
 
 
 //admin stats

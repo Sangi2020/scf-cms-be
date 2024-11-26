@@ -1,19 +1,30 @@
 import nodemailer from 'nodemailer';
+import { getEmailConfig } from '../controllers/emailConfig.controller.js';
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.FROM_MAIL_ID,
-        pass: process.env.FROM_MAIL_PASSWORD
-    }
-});
+const createTransporter = async () => {
+    const emailConfig = await getEmailConfig();
+  
+    const transporter = nodemailer.createTransport({
+      host: emailConfig.host,        // Host from DB
+      port: emailConfig.port,        // Port from DB
+      secure: emailConfig.secure,    // Secure from DB
+      auth: {
+        user: emailConfig.authUser,  // Auth user from DB
+        pass: emailConfig.authPass   // Auth pass from DB
+      }
+    });
+    return transporter;
+}
+
 
 
 export const sendEmail = async ({ to, subject, html }) => {
     try {
+        const transporter = await createTransporter();
+        const emailConfig = await getEmailConfig();
         const mailOptions = {
-            from: process.env.FROM_MAIL_ID,
-            to,
+            from: emailConfig.authUser,
+            to, 
             subject,
             html
         };
@@ -193,8 +204,10 @@ export const newsletterTemplate = (content, unsubscribeUrl, subject) => {
 // Send newsletter to a single recipient
 export const sendNewsletterEmail = async ({ to, subject, content , unsubscribeUrl }) => {
     try {
+        const transporter = await createTransporter();
+         const emailConfig = await getEmailConfig();
         const mailOptions = {
-            from: process.env.FROM_MAIL_ID,
+            from: emailConfig.authUser,
             to,
             subject,
             html: newsletterTemplate(content ,unsubscribeUrl ,subject)
