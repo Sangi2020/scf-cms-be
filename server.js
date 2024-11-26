@@ -14,6 +14,7 @@ import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
 import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
 import adminSocialRoutes from "./routes/admin/social.routes.js";
 import adminStatRoutes from "./routes/admin/stat.routes.js";
+import adminSeoRoutes from "./routes/admin/seo.routes.js";
 
 
 // web routes
@@ -26,6 +27,7 @@ import webClientRoutes from "./routes/web/client.routes.js";
 import webCatalogueRoutes from "./routes/web/catalogue.routes.js";
 import webNewsletterRoutes from "./routes/web/newsletter.routes.js";
 import webSocialRoutes from "./routes/web/social.routes.js";
+import webSeoRoutes from "./routes/web/seo.routes.js";
 
 const PORT = process.env.PORT;
 const app = express();
@@ -48,6 +50,7 @@ app.use("/api/v1/admin/qna", adminQnaRoutes);
 app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
 app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
 app.use('/api/v1/admin/social', adminSocialRoutes);
+app.use('/api/v1/admin/seo', adminSeoRoutes);
 
 
 //admin stats
@@ -66,6 +69,7 @@ app.use("/api/v1/web/qna", webQnaRoutes);
 app.use("/api/v1/web/catalogue", webCatalogueRoutes);
 app.use("/api/v1/web/newsletter", webNewsletterRoutes);
 app.use('/api/v1/web/social', webSocialRoutes);
+app.use('/api/v1/web/seo', webSeoRoutes);
 
 
 
