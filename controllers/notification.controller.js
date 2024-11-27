@@ -24,7 +24,7 @@ export const markAsRead = async (req, res) => {
     const { id } = req.params;
     await prisma.notification.update({
       where: { id },
-      data: { read: true },
+      data: { isRead: true },
     });
     res.json({ message: 'Notification marked as read' });
   } catch (error) {
@@ -67,7 +67,7 @@ export const deleteNotification = async (req, res) => {
   }
 }
 
-export const deleteAllNotifications = async (req, res) => {
+export const clearAllNotifications = async (req, res) => {
   try {
     await prisma.notification.deleteMany({});
     res.json({ message: 'All notifications cleared successfully' });
