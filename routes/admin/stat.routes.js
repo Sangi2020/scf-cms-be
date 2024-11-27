@@ -1,5 +1,5 @@
 import express from "express";
-import { activeUsers, bounceRate, cityStats, countryAnalytics, engagedSessions, fullPageData, pageViewsByPage, totalBlogs, totalEnquiries, totalNewsletterSubscribers, totalPageViews,  trafficSources } from "../../controllers/stat.controller.js";
+import { activeUsers, bounceRate, cityStats, countryAnalytics, engagedSessions, enquiryStats, fullPageData, pageViewsByPage, sessionDurationDistribution, totalBlogs, totalEnquiries, totalNewsletterSubscribers, totalPageViews,  trafficSources } from "../../controllers/stat.controller.js";
 
 
 
@@ -16,6 +16,7 @@ router.get('/bounce-rate',bounceRate)
 router.get('/page-views-by-page',pageViewsByPage)
 router.get('/full-page-data',fullPageData)
 router.get('/traffic-sources',trafficSources)
+router.get('/session-duration',sessionDurationDistribution)
 
 
 // 
@@ -23,6 +24,7 @@ router.get('/traffic-sources',trafficSources)
 router.get('/total-enquiries',totalEnquiries)
 router.get('/total-subscribers',totalNewsletterSubscribers)
 router.get('/total-blogs',totalBlogs)
+router.get('/enquiries/last-7-days',enquiryStats)
 
 
 
