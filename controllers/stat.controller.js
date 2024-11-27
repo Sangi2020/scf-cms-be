@@ -297,17 +297,42 @@ export const trafficSources = async (req, res) => {
     }
 };
 
+export const sessionDurationDistribution = async (req, res) => {
+    try {
+        const dateRange = getDateRange(req);
 
+        // Fetch session duration data
+        const result = await fetchReport(
+            [{ name: 'averageSessionDuration' }], // GA4 metric for session duration
+            [{ name: 'sessionSourceMedium' }],   // Optional dimension for grouping by source
+            dateRange
+        );
 
+        if (!result?.length) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'No session duration data found.' 
+            });
+        }
 
+        // Format the data for the frontend
+        const formattedData = result.map(item => ({
+            source: item.sessionSourceMedium || 'Unknown',
+            avgSessionDuration: parseFloat(item.averageSessionDuration).toFixed(2) // Average duration in seconds
+        }));
 
+        // Sort by session duration descending
+        formattedData.sort((a, b) => b.avgSessionDuration - a.avgSessionDuration);
 
-
-
-
-
-
-
+        res.json({ success: true, data: formattedData });
+    } catch (error) {
+        console.error('Error fetching session duration data:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Failed to fetch session duration data.' 
+        });
+    }
+};
 
 
 
@@ -365,3 +390,43 @@ export const totalBlogs = async (req, res) => {
       });
     }
   };
+
+
+
+  export const enquiryStats = async (req, res) => {
+    try {
+      // Get the current date and calculate 7 days ago
+      const today = new Date();
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(today.getDate() - 7);
+  
+      // Fetch enquiries created in the last 7 days
+      const enquiries = await prisma.enquiries.findMany({
+        where: {
+          createdAt: {
+            gte: sevenDaysAgo,
+          },
+        },
+      });
+  
+      const groupedData = {};
+      enquiries.forEach((enquiry) => {
+        const date = enquiry.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        groupedData[date] = (groupedData[date] || 0) + 1;
+      });
+  
+      // Create chart-compatible data
+      const chartData = [["Date", "Enquiries"]];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() - i);
+        const formattedDate = date.toISOString().split("T")[0];
+        chartData.push([formattedDate, groupedData[formattedDate] || 0]);
+      }
+  
+      res.json(chartData.reverse());
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "Failed to fetch data" });
+    }
+  }
