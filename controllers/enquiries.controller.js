@@ -182,7 +182,27 @@ export const deleteEnquiry = async (req, res) => {
 
 export const exportEnquiries = async (req, res) => {
   try {
-    const enquiries = await prisma.enquiries.findMany();
+    const { status, startDate, endDate } = req.query;
+
+    // Build query filters
+    const filters = {};
+
+    if (status) {
+      filters.status = status;
+    }
+
+    if (startDate) {
+      filters.createdAt = { ...filters.createdAt, gte: new Date(startDate) };
+    }
+
+    if (endDate) {
+      filters.createdAt = { ...filters.createdAt, lte: new Date(endDate) };
+    }
+
+    // Fetch enquiries with filters applied
+    const enquiries = await prisma.enquiries.findMany({
+      where: filters,
+    });
 
     // Create a new workbook and worksheet
     const workbook = new ExcelJS.Workbook();
@@ -194,17 +214,19 @@ export const exportEnquiries = async (req, res) => {
       { header: 'Email', key: 'email', width: 25 },
       { header: 'Phone Number', key: 'phoneNumber', width: 15 },
       { header: 'Message', key: 'message', width: 40 },
+      { header: 'Status', key: 'status', width: 10 },
       { header: 'Created At', key: 'createdAt', width: 20 },
       { header: 'Updated At', key: 'updatedAt', width: 20 },
     ];
 
     // Add rows
-    enquiries.forEach(enquiry => {
+    enquiries.forEach((enquiry) => {
       worksheet.addRow({
         name: enquiry.name,
         email: enquiry.email,
         phoneNumber: enquiry.phoneNumber,
         message: enquiry.message,
+        status: enquiry.status,
         createdAt: enquiry.createdAt,
         updatedAt: enquiry.updatedAt,
       });
@@ -221,6 +243,7 @@ export const exportEnquiries = async (req, res) => {
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
+    console.error('Error exporting enquiries:', error);
     res.status(500).json({ error: 'Failed to export enquiries' });
   }
-}
+};
