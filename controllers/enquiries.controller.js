@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
-import ExcelJS from 'exceljs';
 import { createNotification } from "../helpers/createNotification.js";
-import { format } from "date-fns";
-import mammoth from "mammoth";
-import puppeteer from "puppeteer";
-import { Document, Packer, Table, TableRow, TableCell, TextRun } from 'docx';
+import ExcelJS from 'exceljs';
+import PDFDocument from 'pdfkit';
+import { format } from 'date-fns';
+
 
 
 const prisma = new PrismaClient();
@@ -54,9 +53,6 @@ export const createContactEnquiry = async (req, res) => {
     });
   }
 };
-
-
-
 
 
 //admin
@@ -184,6 +180,8 @@ export const deleteEnquiry = async (req, res) => {
   }
 }
 
+
+
 export const exportEnquiries = async (req, res) => {
   try {
     const { status, startDate, endDate, format: fileFormat } = req.query;
@@ -206,6 +204,7 @@ export const exportEnquiries = async (req, res) => {
     // Fetch enquiries with filters applied
     const enquiries = await prisma.enquiries.findMany({
       where: filters,
+      orderBy: { createdAt: 'desc' },
     });
 
     if (fileFormat === 'excel') {
@@ -219,8 +218,7 @@ export const exportEnquiries = async (req, res) => {
         { header: 'Phone Number', key: 'phoneNumber', width: 15 },
         { header: 'Message', key: 'message', width: 40 },
         { header: 'Status', key: 'status', width: 10 },
-        { header: 'Created At', key: 'createdAt', width: 20 },
-        { header: 'Updated At', key: 'updatedAt', width: 20 },
+        { header: 'Date', key: 'createdAt', width: 20 },
       ];
 
       enquiries.forEach((enquiry) => {
@@ -230,8 +228,7 @@ export const exportEnquiries = async (req, res) => {
           phoneNumber: enquiry.phoneNumber,
           message: enquiry.message,
           status: enquiry.status,
-          createdAt: format(new Date(enquiry.createdAt), 'dd MMM yyyy HH:mm:ss'),
-          updatedAt: format(new Date(enquiry.updatedAt), 'dd MMM yyyy HH:mm:ss'),
+          createdAt: format(new Date(enquiry.createdAt), 'dd MMM yyyy'),
         });
       });
 
@@ -242,74 +239,13 @@ export const exportEnquiries = async (req, res) => {
       res.setHeader('Content-Disposition', 'attachment; filename=enquiries.xlsx');
       await workbook.xlsx.write(res);
       res.end();
-    } else if (fileFormat === 'docs' || fileFormat === 'pdf') {
-      // Export as DOCX (Word Document with table)
-      const doc = new Document({
-        creator: 'SCF CMS',  // Adding the creator metadata
-        title: 'Enquiries Report',  // Adding a title for the document
-        sections: [ // Ensure sections are passed as an array
-          {
-            properties: {},
-            children: [
-              new TextRun("Enquiries Report")
-                .bold()
-                .size(24)
-                .center(),
-              new TextRun("\n"), // New line
-              new Table({
-                rows: [
-                  new TableRow({
-                    children: [
-                      new TableCell({ children: [new TextRun("Name")] }),
-                      new TableCell({ children: [new TextRun("Email")] }),
-                      new TableCell({ children: [new TextRun("Phone Number")] }),
-                      new TableCell({ children: [new TextRun("Message")] }),
-                      new TableCell({ children: [new TextRun("Status")] }),
-                      new TableCell({ children: [new TextRun("Created At")] }),
-                      new TableCell({ children: [new TextRun("Updated At")] }),
-                    ],
-                  }),
-                  ...enquiries.map((enquiry) => new TableRow({
-                    children: [
-                      new TableCell({ children: [new TextRun(enquiry.name)] }),
-                      new TableCell({ children: [new TextRun(enquiry.email)] }),
-                      new TableCell({ children: [new TextRun(enquiry.phoneNumber)] }),
-                      new TableCell({ children: [new TextRun(enquiry.message)] }),
-                      new TableCell({ children: [new TextRun(enquiry.status)] }),
-                      new TableCell({ children: [new TextRun(format(new Date(enquiry.createdAt), 'dd MMM yyyy HH:mm:ss'))] }),
-                      new TableCell({ children: [new TextRun(format(new Date(enquiry.updatedAt), 'dd MMM yyyy HH:mm:ss'))] }),
-                    ],
-                  }))
-                ],
-              })
-            ],
-          }
-        ]
-      });
+    } else if (fileFormat === 'pdf') {
+      // Generate PDF
+      const pdfBuffer = await generatePdfReport(enquiries, startDate, endDate);
 
-      const buffer = await Packer.toBuffer(doc);
-
-      if (fileFormat === 'pdf') {
-        // Convert DOCX to PDF using puppeteer and mammoth
-        const html = await mammoth.convertToHtml({ buffer });
-
-        // Launch Puppeteer to convert HTML to PDF
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setContent(html.value);
-        const pdfBuffer = await page.pdf({ format: 'A4' });
-
-        await browser.close();
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=enquiries.pdf');
-        res.send(pdfBuffer);
-      } else {
-        // Send DOCX file if format is not pdf
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        res.setHeader('Content-Disposition', 'attachment; filename=enquiries.docx');
-        res.send(buffer);
-      }
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=enquiries.pdf');
+      res.send(pdfBuffer);
     } else {
       res.status(400).json({ error: 'Invalid format specified' });
     }
@@ -318,3 +254,114 @@ export const exportEnquiries = async (req, res) => {
     res.status(500).json({ error: 'Failed to export enquiries' });
   }
 };
+
+// Function to generate PDF report with structured table
+async function generatePdfReport(enquiries, startDate, endDate) {
+  return new Promise((resolve, reject) => {
+    // Define margins for left and right (e.g., 30)
+    const marginLeftRight = 30;
+    const marginTopBottom = 50; // Keep top/bottom margin the same
+    const pageWidth = 595.28;  // A4 width in points (default size for A4 page)
+    const pageHeight = 841.89; // A4 height in points (default size for A4 page)
+
+    // Create a new PDF document
+    const doc = new PDFDocument({ size: 'A4' });
+    const buffers = [];
+
+    // Collect buffer data
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+      const pdfBuffer = Buffer.concat(buffers);
+      resolve(pdfBuffer);
+    });
+
+    // Set the starting point after the left margin
+    const contentStartX = marginLeftRight;
+    const contentWidth = pageWidth - 2 * marginLeftRight; // Width after subtracting left and right margins
+
+    // PDF Title
+    const dateRangeText = startDate && endDate 
+      ? `From ${format(new Date(startDate), 'dd MMM yyyy')} to ${format(new Date(endDate), 'dd MMM yyyy')}` 
+      : 'Total';
+    
+    doc.fontSize(16).font('Helvetica-Bold').text(`Enquiries Report - ${dateRangeText}`, { align: 'center' });
+    doc.moveDown();
+
+    // Table configuration
+    const tableTop = doc.y;
+    const headers = [
+      'S.No.', 'Name', 'Email', 'Phone', 'Message', 
+      'Status', 'Date'
+    ];
+    const columnWidths = [40, 80, 100, 80, 120, 50, 70];
+    
+    // Function to draw table cell
+    function drawCell(text, x, y, width, rowHeight, isHeader = false) {
+      // Draw cell border
+      doc.lineWidth(0.5)
+         .rect(x, y, width, rowHeight)
+         .stroke();
+
+      // Add text
+      doc.font(isHeader ? 'Helvetica-Bold' : 'Helvetica')
+         .fontSize(10)
+         .text(text || '', x + 5, y + 5, { 
+           width: width - 10, 
+           align: 'left' 
+         });
+    }
+
+    // Function to calculate the height based on content
+    function getRowHeight(text, width) {
+      return doc.heightOfString(text, { width: width - 10, align: 'left' }) + 10;
+    }
+
+    // Draw table headers
+    let currentX = contentStartX;
+    headers.forEach((header, index) => {
+      drawCell(header, currentX, tableTop, columnWidths[index], 20, true); 
+      currentX += columnWidths[index];
+    });
+
+    // Draw table rows with serial numbers
+    let currentY = tableTop + 20; // Start after header
+    enquiries.forEach((enquiry, index) => {
+      currentX = contentStartX;
+      
+      // Prepare row data with serial number
+      const rowData = [
+        (index + 1).toString(), // Serial number
+        enquiry.name,
+        enquiry.email,
+        enquiry.phoneNumber,
+        enquiry.message,
+        enquiry.status,
+        format(new Date(enquiry.createdAt), 'dd MMM yyyy'),
+      ];
+
+      // Calculate the height for the row based on the longest text
+      let rowHeight = 20;
+      rowData.forEach((cellContent, index) => {
+        const cellHeight = getRowHeight(cellContent, columnWidths[index]);
+        rowHeight = Math.max(rowHeight, cellHeight); // Choose the tallest height
+      });
+
+      // Draw cells for this row
+      rowData.forEach((cellContent, index) => {
+        drawCell(cellContent, currentX, currentY, columnWidths[index], rowHeight);
+        currentX += columnWidths[index];
+      });
+
+      currentY += rowHeight;
+
+      // Add page break if needed
+      if (currentY > doc.page.height - 100) {
+        doc.addPage();
+        currentY = 50;
+      }
+    });
+
+    // Finalize PDF
+    doc.end();
+  });
+}
