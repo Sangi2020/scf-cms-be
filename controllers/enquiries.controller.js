@@ -2,6 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from 'uuid';
 import ExcelJS from 'exceljs';
 import { createNotification } from "../helpers/createNotification.js";
+import { format } from "date-fns";
+import mammoth from "mammoth";
+import puppeteer from "puppeteer";
+import { Document, Packer, Table, TableRow, TableCell, TextRun } from 'docx';
 
 
 const prisma = new PrismaClient();
@@ -182,7 +186,7 @@ export const deleteEnquiry = async (req, res) => {
 
 export const exportEnquiries = async (req, res) => {
   try {
-    const { status, startDate, endDate } = req.query;
+    const { status, startDate, endDate, format: fileFormat } = req.query;
 
     // Build query filters
     const filters = {};
@@ -204,44 +208,111 @@ export const exportEnquiries = async (req, res) => {
       where: filters,
     });
 
-    // Create a new workbook and worksheet
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Enquiries');
+    if (fileFormat === 'excel') {
+      // Export as Excel
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Enquiries');
 
-    // Add header row
-    worksheet.columns = [
-      { header: 'Name', key: 'name', width: 20 },
-      { header: 'Email', key: 'email', width: 25 },
-      { header: 'Phone Number', key: 'phoneNumber', width: 15 },
-      { header: 'Message', key: 'message', width: 40 },
-      { header: 'Status', key: 'status', width: 10 },
-      { header: 'Created At', key: 'createdAt', width: 20 },
-      { header: 'Updated At', key: 'updatedAt', width: 20 },
-    ];
+      worksheet.columns = [
+        { header: 'Name', key: 'name', width: 20 },
+        { header: 'Email', key: 'email', width: 25 },
+        { header: 'Phone Number', key: 'phoneNumber', width: 15 },
+        { header: 'Message', key: 'message', width: 40 },
+        { header: 'Status', key: 'status', width: 10 },
+        { header: 'Created At', key: 'createdAt', width: 20 },
+        { header: 'Updated At', key: 'updatedAt', width: 20 },
+      ];
 
-    // Add rows
-    enquiries.forEach((enquiry) => {
-      worksheet.addRow({
-        name: enquiry.name,
-        email: enquiry.email,
-        phoneNumber: enquiry.phoneNumber,
-        message: enquiry.message,
-        status: enquiry.status,
-        createdAt: enquiry.createdAt,
-        updatedAt: enquiry.updatedAt,
+      enquiries.forEach((enquiry) => {
+        worksheet.addRow({
+          name: enquiry.name,
+          email: enquiry.email,
+          phoneNumber: enquiry.phoneNumber,
+          message: enquiry.message,
+          status: enquiry.status,
+          createdAt: format(new Date(enquiry.createdAt), 'dd MMM yyyy HH:mm:ss'),
+          updatedAt: format(new Date(enquiry.updatedAt), 'dd MMM yyyy HH:mm:ss'),
+        });
       });
-    });
 
-    // Set response headers and send the Excel file
-    res.setHeader(
-      'Content-Type',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
-    res.setHeader('Content-Disposition', 'attachment; filename=enquiries.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+      res.setHeader('Content-Disposition', 'attachment; filename=enquiries.xlsx');
+      await workbook.xlsx.write(res);
+      res.end();
+    } else if (fileFormat === 'docs' || fileFormat === 'pdf') {
+      // Export as DOCX (Word Document with table)
+      const doc = new Document({
+        creator: 'SCF CMS',  // Adding the creator metadata
+        title: 'Enquiries Report',  // Adding a title for the document
+        sections: [ // Ensure sections are passed as an array
+          {
+            properties: {},
+            children: [
+              new TextRun("Enquiries Report")
+                .bold()
+                .size(24)
+                .center(),
+              new TextRun("\n"), // New line
+              new Table({
+                rows: [
+                  new TableRow({
+                    children: [
+                      new TableCell({ children: [new TextRun("Name")] }),
+                      new TableCell({ children: [new TextRun("Email")] }),
+                      new TableCell({ children: [new TextRun("Phone Number")] }),
+                      new TableCell({ children: [new TextRun("Message")] }),
+                      new TableCell({ children: [new TextRun("Status")] }),
+                      new TableCell({ children: [new TextRun("Created At")] }),
+                      new TableCell({ children: [new TextRun("Updated At")] }),
+                    ],
+                  }),
+                  ...enquiries.map((enquiry) => new TableRow({
+                    children: [
+                      new TableCell({ children: [new TextRun(enquiry.name)] }),
+                      new TableCell({ children: [new TextRun(enquiry.email)] }),
+                      new TableCell({ children: [new TextRun(enquiry.phoneNumber)] }),
+                      new TableCell({ children: [new TextRun(enquiry.message)] }),
+                      new TableCell({ children: [new TextRun(enquiry.status)] }),
+                      new TableCell({ children: [new TextRun(format(new Date(enquiry.createdAt), 'dd MMM yyyy HH:mm:ss'))] }),
+                      new TableCell({ children: [new TextRun(format(new Date(enquiry.updatedAt), 'dd MMM yyyy HH:mm:ss'))] }),
+                    ],
+                  }))
+                ],
+              })
+            ],
+          }
+        ]
+      });
 
-    // Write workbook to response
-    await workbook.xlsx.write(res);
-    res.end();
+      const buffer = await Packer.toBuffer(doc);
+
+      if (fileFormat === 'pdf') {
+        // Convert DOCX to PDF using puppeteer and mammoth
+        const html = await mammoth.convertToHtml({ buffer });
+
+        // Launch Puppeteer to convert HTML to PDF
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(html.value);
+        const pdfBuffer = await page.pdf({ format: 'A4' });
+
+        await browser.close();
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=enquiries.pdf');
+        res.send(pdfBuffer);
+      } else {
+        // Send DOCX file if format is not pdf
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        res.setHeader('Content-Disposition', 'attachment; filename=enquiries.docx');
+        res.send(buffer);
+      }
+    } else {
+      res.status(400).json({ error: 'Invalid format specified' });
+    }
   } catch (error) {
     console.error('Error exporting enquiries:', error);
     res.status(500).json({ error: 'Failed to export enquiries' });
