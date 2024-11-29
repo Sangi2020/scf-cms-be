@@ -5,7 +5,7 @@ model Client {
   website     String?  // Optional website URL
   description String?  @db.Text  // Optional description of the client/partnership
   isActive    Boolean  @default(true)
-  order       Int      @db.Int
+  order       Int?     @db.Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 } 

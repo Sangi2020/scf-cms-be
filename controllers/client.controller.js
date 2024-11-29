@@ -11,7 +11,7 @@ export const createClient = async (req, res) => {
     }
 
     // Validate required fields
-    if (!name || !order) {
+    if (!name ) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
@@ -77,7 +77,7 @@ export const updateClient = async (req, res) => {
     const { name, website, description, order, isActive } = req.body;
 
     // Validate required fields
-    if (!name || !order) {
+    if (!name) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
@@ -111,18 +111,25 @@ export const updateClient = async (req, res) => {
             logoUrl = result.secure_url;
         }
 
+        // Prepare data for update
+        const updateData = {
+            name,
+            logo: logoUrl,
+            website,
+            description,
+            isActive: isActive === 'true',
+            updatedAt: new Date()
+        };
+
+        // Include order only if it's provided
+        if (order !== undefined) {
+            updateData.order = parseInt(order, 10);
+        }
+
         // Update client
         const updatedClient = await prisma.client.update({
             where: { id },
-            data: {
-                name,
-                logo: logoUrl,
-                website,
-                description,
-                order: parseInt(order, 10),
-                isActive: isActive === 'true',
-                updatedAt: new Date()
-            }
+            data: updateData
         });
 
         return res.status(200).json({
