@@ -29,7 +29,6 @@ import webClientRoutes from "./routes/web/client.routes.js";
 import webCatalogueRoutes from "./routes/web/catalogue.routes.js";
 import webNewsletterRoutes from "./routes/web/newsletter.routes.js";
 import webSocialRoutes from "./routes/web/social.routes.js";
-import webSeoRoutes from "./routes/web/seo.routes.js";
 
 
 const PORT = process.env.PORT;
@@ -73,7 +72,6 @@ app.use("/api/v1/web/qna", webQnaRoutes);
 app.use("/api/v1/web/catalogue", webCatalogueRoutes);
 app.use("/api/v1/web/newsletter", webNewsletterRoutes);
 app.use('/api/v1/web/social', webSocialRoutes);
-app.use('/api/v1/web/seo', webSeoRoutes);
 
 
 
