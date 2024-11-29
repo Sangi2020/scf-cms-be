@@ -25,13 +25,13 @@ export const register = async (req, res) => {
         return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // Check if email has the correct domain
-    const allowedDomain = '@scfstrategies.com';
-    if (!email.endsWith(allowedDomain)) {
-        return res.status(400).json({
-            message: `Invalid email domain. Please use an email with valid domain`,
-        });
-    }
+    // // Check if email has the correct domain
+    // const allowedDomain = '@scfstrategies.com';
+    // if (!email.endsWith(allowedDomain)) {
+    //     return res.status(400).json({
+    //         message: `Invalid email domain. Please use an email with valid domain`,
+    //     });
+    // }
 
     try {
         // Check if user already exists
@@ -65,6 +65,7 @@ export const register = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                role: user.role
             },
         });
     } catch (error) {
@@ -114,6 +115,7 @@ export const login = async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                role: user.role
             },
         });
         // If the user is not found or the password is incorrect, return an error
