@@ -173,7 +173,14 @@ export const emailTemplates = {
 }
 
 
-
+export const testEmailTemplate = () => {
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 5px; background-color: #f9f9f9;">
+        <h2 style="color: #333;">Test Email</h2>
+        <p style="color: #555;">This is a test email to check your email configuration. If you see this message, your email setup is working fine.</p>
+      </div>
+    `;
+  };
 
 
 // Newsletter template
