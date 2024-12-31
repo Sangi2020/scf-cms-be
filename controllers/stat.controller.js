@@ -430,3 +430,107 @@ export const totalBlogs = async (req, res) => {
       res.status(500).json({ error: "Failed to fetch data" });
     }
   }
+
+
+  export const totalCounts = async (req, res) => {
+    try {
+        const [
+          totalClients,
+          activeClients,
+          totalBlogs,
+          totalTestimonials,
+          totalCatalogues,
+          activeCatalogues,
+          unreadEnquiries,
+          totalEnquiries,
+          totalNewsletterSubscribers,
+          unreadNotifications,
+          activeSocialLinks,
+          activeTeamMembers
+        ] = await Promise.all([
+          // Clients
+          prisma.client.count(),
+          prisma.client.count({
+            where: { isActive: true }
+          }),
+    
+          // Blogs
+          prisma.blog.count(),
+    
+          // Testimonials
+          prisma.testimonial.count(),
+    
+          // Catalogues
+          prisma.catalogue.count(),
+          prisma.catalogue.count({
+            where: { isActive: true }
+          }),
+    
+          // Enquiries
+          prisma.enquiries.count({
+            where: { status: "unread" }
+          }),
+          prisma.enquiries.count(),
+    
+          // Newsletter Subscribers
+          prisma.newsletter.count(),
+    
+          // Unread Notifications
+          prisma.notification.count({
+            where: { isRead: false }
+          }),
+    
+          // Active Social Links
+          prisma.social.count({
+            where: { isActive: true }
+          }),
+    
+          // Active Team Members
+          prisma.team.count({
+            where: { isActive: true }
+          })
+        ]);
+    
+        res.json({
+          success: true,
+          counts: {
+            clients: {
+              total: totalClients,
+              active: activeClients
+            },
+            blogs: {
+              total: totalBlogs
+            },
+            testimonials: {
+              total: totalTestimonials
+            },
+            catalogues: {
+              total: totalCatalogues,
+              active: activeCatalogues
+            },
+            enquiries: {
+              total: totalEnquiries,
+              unread: unreadEnquiries
+            },
+            newsletter: {
+              subscribers: totalNewsletterSubscribers
+            },
+            notifications: {
+              unread: unreadNotifications
+            },
+            social: {
+              active: activeSocialLinks
+            },
+            team: {
+              active: activeTeamMembers
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching counts:", error);
+        res.status(500).json({
+          success: false,
+          error: "Failed to fetch counts"
+        });
+      }
+  }
