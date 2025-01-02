@@ -40,3 +40,12 @@ model Catalogue {
   @@index([isActive])
   @@index([order])
 } 
+
+model Documents {
+  id          String   @id @default(uuid())
+  title       String   // Title of the document (e.g., Privacy & Policy, Terms, Disclaimer)
+  content     String   // Content of the document (this will store the HTML or text from React Quill)
+  type        String // value (Privacy, Terms, Disclaimer)
+  createdAt   DateTime @default(now()) // Timestamp when the document was created
+  updatedAt   DateTime @updatedAt // Timestamp when the document was last updated
+}
