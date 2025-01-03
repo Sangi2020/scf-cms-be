@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../helpers/prisma.js";
 import { v4 as uuidv4 } from 'uuid';
 import { deleteImageFromCloudinary, imageUploadToCloudinary } from "../helpers/image.upload.js";
 
-const prisma = new PrismaClient();
+
 
 // Create a new catalogue
 export const createCatalogue = async (req, res) => {

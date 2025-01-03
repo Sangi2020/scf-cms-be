@@ -1,78 +1,15 @@
 
 import * as argon2 from "argon2";
 import generateJwtToken from "../utils/generateJwtToken.js";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../helpers/prisma.js";
 import generateOTP from "../utils/generateOtp.js";
 import { sendEmail } from "../helpers/email.js";
 import { emailTemplates } from "../helpers/email.js";
 
 
-const prisma = new PrismaClient();
 
-const UserType = {
-    ADMIN: 'admin',
-    SUPER_ADMIN: 'superadmin',
-  };
 
-export const createUser = async (req, res) => {
-    const { name, email, password, confirmPassword, role } = req.body;
-    console.log(req.body);
-    
 
-    // Ensure all fields are provided
-    if (!name || !email || !password || !confirmPassword || !role) {
-        return res.status(400).json({ message: "Please provide all the required fields" });
-    }
-    if (password.length < 6) {
-        return res.status(400).json({ message: "Password must be at least 6 characters long" });
-    }
-
-    if (password !== confirmPassword) {
-        return res.status(400).json({ message: "Passwords do not match" });
-    }
-
-    if (![UserType.ADMIN, UserType.SUPER_ADMIN].includes(role)) {
-        return res.status(400).json({ message: "Invalid role" });
-    }
-
-    try {
-        const userExists = await prisma.user.findUnique({
-            where: {
-                email,
-            },
-        });
-
-        if (userExists) {
-            return res.status(400).json({ message: "There is already an account with this email" });
-        }
-
-        const hashedPassword = await argon2.hash(password);
-
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                role, 
-            },
-        });
-        return res.status(201).json({
-            message: 'User created successfully',
-            success: true,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            },
-        });
-    } catch (error) {
-        console.error('Error during user creation:', error);
-        return res.status(500).json({
-            message: 'Something went wrong while creating the user', success: false
-        });
-    }
-}
 
 export const login = async (req, res) => {
     const { email, password } = req.body;

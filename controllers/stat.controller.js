@@ -1,6 +1,6 @@
 import fetchReport from "../helpers/analytics.js";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../helpers/prisma.js";
+
 
 // Helper function to handle date range from request or default
 const getDateRange = (req) => {

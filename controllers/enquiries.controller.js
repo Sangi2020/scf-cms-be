@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../helpers/prisma.js";
 import { v4 as uuidv4 } from 'uuid';
 import { createNotification } from "../helpers/createNotification.js";
 import ExcelJS from 'exceljs';
@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 
 
 
-const prisma = new PrismaClient();
+
 
 export const createContactEnquiry = async (req, res) => {
   const { name, phoneNumber, email, message: enquiryMessage } = req.body; // Renamed message to enquiryMessage

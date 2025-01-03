@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from "../helpers/prisma.js";
 import { createNotification } from '../helpers/createNotification.js';
 
 
-const prisma = new PrismaClient();
 
 export const getNotifications = async (req, res) => {
   try {

@@ -18,6 +18,7 @@ import adminStatRoutes from "./routes/admin/stat.routes.js";
 import adminEmailConfigRoutes from "./routes/admin/emailConfig.routes.js";
 import adminNotificationRoutes from "./routes/admin/notification.routes.js";
 import adminDocumentRoutes from "./routes/admin/document.routes.js"
+import adminUserRoutes from "./routes/admin/user.routes.js"
 
 
 // web routes
@@ -55,6 +56,7 @@ app.use('/api/v1/admin/social', adminSocialRoutes);
 app.use('/api/v1/admin/config', adminEmailConfigRoutes)
 app.use('/api/v1/admin/notification', adminNotificationRoutes)
 app.use('/api/v1/admin/document', adminDocumentRoutes)
+app.use('/api/v1/admin/users', adminUserRoutes)
 
 
 
