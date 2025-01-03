@@ -1,40 +1,42 @@
 import express from "express";
 
 import authRoutes from "./auth.routes.js";
-import adminBlogRoutes from "./blog.routes.js";
-import adminEnquiriesRoutes from "./enquiries.routes.js";
-import adminContentsRoutes from "./contents.routes.js";
-import adminTeamRoutes from "./team.routes.js";
-import adminQnaRoutes from "./qna.routes.js";
-import adminClientRoutes from "./client.routes.js";
-import adminCatalogueRoutes from "./catalogue.routes.js";
-import adminNewsletterRoutes from "./newsletter.routes.js";
-import adminSocialRoutes from "./social.routes.js";
-import adminStatRoutes from "./stat.routes.js";
-import adminEmailConfigRoutes from "./emailConfig.routes.js";
-import adminNotificationRoutes from "./notification.routes.js";
-import adminDocumentRoutes from "./document.routes.js"
-import adminUserRoutes from "./user.routes.js"
+import blogRoutes from "./blog.routes.js";
+import enquiriesRoutes from "./enquiries.routes.js";
+import contentsRoutes from "./contents.routes.js";
+import teamRoutes from "./team.routes.js";
+import qnaRoutes from "./qna.routes.js";
+import clientRoutes from "./client.routes.js";
+import catalogueRoutes from "./catalogue.routes.js";
+import newsletterRoutes from "./newsletter.routes.js";
+import socialRoutes from "./social.routes.js";
+import statRoutes from "./stat.routes.js";
+import emailConfigRoutes from "./emailConfig.routes.js";
+import notificationRoutes from "./notification.routes.js";
+import documentRoutes from "./document.routes.js"
+import userRoutes from "./user.routes.js"
+import seoRoutes from "./seo.routes.js"
 
 
 
 const router = express.Router();
 
 router.use("/auth", authRoutes);
-router.use("/blog", adminBlogRoutes);
-router.use("/team", adminTeamRoutes);
-router.use("/enquiries", adminEnquiriesRoutes);
-router.use("/contents", adminContentsRoutes);
-router.use("/client", adminClientRoutes);
-router.use("/qna", adminQnaRoutes);
-router.use("/catalogue", adminCatalogueRoutes);
-router.use("/newsletter", adminNewsletterRoutes);
-router.use('/social', adminSocialRoutes);
-router.use('/config', adminEmailConfigRoutes)
-router.use('/notification', adminNotificationRoutes)
-router.use('/document', adminDocumentRoutes)
-router.use('/users', adminUserRoutes)
-router.use("/stats", adminStatRoutes);
+router.use("/blog", blogRoutes);
+router.use("/team", teamRoutes);
+router.use("/enquiries", enquiriesRoutes);
+router.use("/contents", contentsRoutes);
+router.use("/client", clientRoutes);
+router.use("/qna", qnaRoutes);
+router.use("/catalogue", catalogueRoutes);
+router.use("/newsletter", newsletterRoutes);
+router.use('/social', socialRoutes);
+router.use('/config', emailConfigRoutes)
+router.use('/notification', notificationRoutes)
+router.use('/document', documentRoutes)
+router.use('/users', userRoutes)
+router.use("/stats", statRoutes);
+router.use("/seo",seoRoutes)
 
 
 export default router;

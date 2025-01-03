@@ -1,8 +1,11 @@
 import express from 'express';
-import { getAllSEO, updateSEO } from '../../controllers/seo.controller.js';
+import { createSEO, deleteSEO, getSEO, updateSEO } from '../../controllers/seo.controller.js';
 
 const router = express.Router();
 
-router.get('/get-all-seo', getAllSEO); // Get all SEO entries
-router.post('/update-seo', updateSEO); // Update a SEO entry
+router.get('/get', getSEO);
+router.post('/create', createSEO);
+router.put('/update/:id', updateSEO);
+router.delete('/delete/:id', deleteSEO);
+
 export default router;
