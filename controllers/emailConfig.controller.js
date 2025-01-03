@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../helpers/prisma.js";
 import { sendEmail, testEmailTemplate } from "../helpers/email.js";
 
-const prisma = new PrismaClient();
+
 
 
 export const upsertEmailConfig = async (req, res) => {

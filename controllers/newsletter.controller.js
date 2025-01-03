@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../helpers/prisma.js";
 import { v4 as uuidv4 } from 'uuid';
 import { sendNewsletterEmail } from "../helpers/email.js";
 import crypto from 'crypto';
@@ -6,7 +6,7 @@ import { createNotification } from "../helpers/createNotification.js";
 
 
 
-const prisma = new PrismaClient();
+
  function generateunSubscribeToken(length = 32) {
     return crypto.randomBytes(length).toString('hex');
 }

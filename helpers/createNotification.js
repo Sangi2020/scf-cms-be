@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from "../helpers/prisma.js";
 import { io } from '../socket/socket.js';
 import { v4 as uuidv4 } from 'uuid';
 
 
 
-const prisma = new PrismaClient();
 
 export const createNotification = async ({ subject, message }) => {
   try {

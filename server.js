@@ -3,33 +3,8 @@ import 'dotenv/config';
 import cors from "cors";
 import { app,  server } from './socket/socket.js'
 
-// admin routes
-import authRoutes from "./routes/admin/auth.routes.js";
-import adminBlogRoutes from "./routes/admin/blog.routes.js";
-import adminEnquiriesRoutes from "./routes/admin/enquiries.routes.js";
-import adminContentsRoutes from "./routes/admin/contents.routes.js";
-import adminTeamRoutes from "./routes/admin/team.routes.js";
-import adminQnaRoutes from "./routes/admin/qna.routes.js";
-import adminClientRoutes from "./routes/admin/client.routes.js";
-import adminCatalogueRoutes from "./routes/admin/catalogue.routes.js";
-import adminNewsletterRoutes from "./routes/admin/newsletter.routes.js";
-import adminSocialRoutes from "./routes/admin/social.routes.js";
-import adminStatRoutes from "./routes/admin/stat.routes.js";
-import adminEmailConfigRoutes from "./routes/admin/emailConfig.routes.js";
-import adminNotificationRoutes from "./routes/admin/notification.routes.js";
-import adminDocumentRoutes from "./routes/admin/document.routes.js"
-
-
-// web routes
-import webBlogRoutes from "./routes/web/blog.routes.js";
-import webEnquiriesRoutes from "./routes/web/enquiries.routes.js";
-import webContentsRoutes from "./routes/web/contents.routes.js";
-import webTeamRoutes from "./routes/web/team.routes.js";
-import webQnaRoutes from "./routes/web/qna.routes.js";
-import webClientRoutes from "./routes/web/client.routes.js";
-import webCatalogueRoutes from "./routes/web/catalogue.routes.js";
-import webNewsletterRoutes from "./routes/web/newsletter.routes.js";
-import webSocialRoutes from "./routes/web/social.routes.js";
+import adminRoutes from './routes/admin/index.route.js';
+import webRoutes from './routes/web/index.route.js';
 
 
 const PORT = process.env.PORT;
@@ -42,43 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // admin routes
-app.use("/api/v1/admin/auth", authRoutes);
-app.use("/api/v1/admin/blog", adminBlogRoutes);
-app.use("/api/v1/admin/team", adminTeamRoutes);
-app.use("/api/v1/admin/enquiries", adminEnquiriesRoutes);
-app.use("/api/v1/admin/contents", adminContentsRoutes);
-app.use("/api/v1/admin/client", adminClientRoutes);
-app.use("/api/v1/admin/qna", adminQnaRoutes);
-app.use("/api/v1/admin/catalogue", adminCatalogueRoutes);
-app.use("/api/v1/admin/newsletter", adminNewsletterRoutes);
-app.use('/api/v1/admin/social', adminSocialRoutes);
-app.use('/api/v1/admin/config', adminEmailConfigRoutes)
-app.use('/api/v1/admin/notification', adminNotificationRoutes)
-app.use('/api/v1/admin/document', adminDocumentRoutes)
-
-
-
-//admin stats
-
-app.use("/api/v1/admin/stats", adminStatRoutes);
-
-
-//web routes
-
-app.use("/api/v1/web/blog", webBlogRoutes);
-app.use("/api/v1/web/team", webTeamRoutes);
-app.use("/api/v1/web/enquiries", webEnquiriesRoutes);
-app.use("/api/v1/web/contents", webContentsRoutes);
-app.use("/api/v1/web/client", webClientRoutes);
-app.use("/api/v1/web/qna", webQnaRoutes);
-app.use("/api/v1/web/catalogue", webCatalogueRoutes);
-app.use("/api/v1/web/newsletter", webNewsletterRoutes);
-app.use('/api/v1/web/social', webSocialRoutes);
-
-
-
-
-
+app.use("/api/v1/admin", adminRoutes);
+app.use('/api/v1/web', webRoutes)
 
 app.get("/", (req, res) => {
   res.send("SCF RUNNING");
