@@ -9,32 +9,33 @@ import { emailTemplates } from "../helpers/email.js";
 
 const prisma = new PrismaClient();
 
-export const register = async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+const UserType = {
+    ADMIN: 'admin',
+    SUPER_ADMIN: 'superadmin',
+  };
+
+export const createUser = async (req, res) => {
+    const { name, email, password, confirmPassword, role } = req.body;
+    console.log(req.body);
+    
 
     // Ensure all fields are provided
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword || !role) {
         return res.status(400).json({ message: "Please provide all the required fields" });
     }
     if (password.length < 6) {
         return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
 
-    // Ensure passwords match
     if (password !== confirmPassword) {
         return res.status(400).json({ message: "Passwords do not match" });
     }
 
-    // // Check if email has the correct domain
-    // const allowedDomain = '@scfstrategies.com';
-    // if (!email.endsWith(allowedDomain)) {
-    //     return res.status(400).json({
-    //         message: `Invalid email domain. Please use an email with valid domain`,
-    //     });
-    // }
+    if (![UserType.ADMIN, UserType.SUPER_ADMIN].includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+    }
 
     try {
-        // Check if user already exists
         const userExists = await prisma.user.findUnique({
             where: {
                 email,
@@ -42,24 +43,21 @@ export const register = async (req, res) => {
         });
 
         if (userExists) {
-            return res.status(400).json({ message: "There is already a account with this email" });
+            return res.status(400).json({ message: "There is already an account with this email" });
         }
 
-        // Hash the password with Argon2
         const hashedPassword = await argon2.hash(password);
 
-        // Create a new user in the database
         const user = await prisma.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
+                role, 
             },
         });
-
-        // Respond with success message
         return res.status(201).json({
-            message: 'User registered successfully',
+            message: 'User created successfully',
             success: true,
             user: {
                 id: user.id,
@@ -69,9 +67,9 @@ export const register = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Error during registration:', error);
+        console.error('Error during user creation:', error);
         return res.status(500).json({
-            message: 'Something went wrong while registering the user ', success: false
+            message: 'Something went wrong while creating the user', success: false
         });
     }
 }
