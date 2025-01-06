@@ -3,19 +3,28 @@ import prisma from '../helpers/prisma.js'
 
 // ** Get SEO Entries **
 export const getSEO = async (req, res) => {
+
+    const { pageTitle } = req.params;
+      
+    if (!pageTitle) {
+      return res.status(400).json({ message: "pageTitle query parameter is required" });
+    }
     try {
-        const seoEntries = await prisma.sEO.findMany();
-        return res.status(200).json({
-            success: true,
-            message: "SEO entries fetched successfully",
-            data: seoEntries
-        });
-    } catch (error) {
-        console.error("Error fetching SEO entries:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Something went wrong while fetching SEO entries"
-        });
+      const seoData = await prisma.sEO.findUnique({
+        where: {
+          pageTitle: pageTitle,
+        },
+      });
+  
+      if (!seoData) {
+        return res.status(404).json({ message: "SEO data not found for this page" });
+      }
+  
+      res.json(seoData);
+    }
+    catch (error) {
+      console.error("Error fetching SEO data:", error);
+      res.status(500).json({ message: "An error occurred while fetching SEO data" });
     }
 };
 
@@ -178,3 +187,89 @@ export const updateSEO = async (req, res) => {
     }
 };
 
+
+
+
+// ** Get SEO Entries **
+
+
+export const getSEOWithParams = async (req, res) => {
+    const { pageTitle } = req.query;
+
+    if (!pageTitle) {
+      return res.status(400).json({ message: "pageTitle query parameter is required" });
+    } 
+    try {
+
+      const seoData = await prisma.sEO.findUnique({
+        where: {
+          pageTitle: pageTitle,
+        },
+      });
+  
+      if (!seoData) {
+        return res.status(404).json({ message: "SEO data not found for this page" });
+      }
+  
+      res.json(seoData);
+    } catch (error) {
+      console.error("Error fetching SEO data:", error);
+      res.status(500).json({ message: "An error occurred while fetching SEO data" });
+    }
+}
+
+
+export const upsertSEO = async (req, res) => {
+    const { pageTitle } = req.params;  
+    const { 
+      title, 
+      description, 
+      keywords, 
+      ogTitle, 
+      ogDescription, 
+      ogImage,
+      ogType, 
+      twitterCard,
+      twitterTitle,
+      twitterDescription,
+      twitterImage,
+    } = req.body;
+  
+    try {
+      const seoData = await prisma.sEO.upsert({
+        where: { pageTitle: pageTitle },
+        update: { 
+          title,
+          description,
+          keywords,
+          ogTitle, 
+          ogDescription, 
+          ogImage,
+          ogType,
+          twitterTitle, 
+          twitterDescription, 
+          twitterCard,
+          twitterImage, 
+        },
+        create: { 
+          pageTitle,
+          title,
+          description,
+          keywords,
+          ogTitle, 
+          ogDescription, 
+          ogImage,
+          ogType,
+          twitterTitle, 
+          twitterDescription, 
+          twitterCard,
+          twitterImage,
+        }
+      });
+  
+      res.json({ message: 'SEO data saved successfully', seoData });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error while saving SEO data', error });
+    }
+  };

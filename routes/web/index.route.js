@@ -9,6 +9,7 @@ import clientRoutes from "./client.routes.js";
 import catalogueRoutes from "./catalogue.routes.js";
 import newsletterRoutes from "./newsletter.routes.js";
 import socialRoutes from "./social.routes.js";
+import seoRoutes from "./seo.routes.js";
 
 
 const router = express.Router();
@@ -22,6 +23,7 @@ router.use("/qna", qnaRoutes);
 router.use("/catalogue", catalogueRoutes);
 router.use("/newsletter", newsletterRoutes);
 router.use('/social', socialRoutes);
+router.use('/seo', seoRoutes)
 
 
 export default router;
