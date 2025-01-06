@@ -24,9 +24,7 @@ router.post("/create-catalogue",
 router.get("/get-all-catalogues", verifyJwtToken, getAllCatalogues);
 router.get("/get-catalogue/:id", verifyJwtToken, getCatalogueById);
 
-router.put("/update-catalogue/:id", 
-    verifyJwtToken, 
-    upload.fields([
+router.put("/update-catalogue/:id",  verifyJwtToken, upload.fields([
         { name: 'image', maxCount: 1 },
         { name: 'document', maxCount: 1 }
     ]), 

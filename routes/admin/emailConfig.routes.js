@@ -1,15 +1,14 @@
 import express from "express";
-
-import verifyjwtToken from "../../middlewares/verifyJwtToken.js";
 import {  getEmailConfiguration, sendTestEmail, upsertEmailConfig } from "../../controllers/emailConfig.controller.js";
+import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
 
 
 
 const router = express.Router();
 
-router.get('/email-config',getEmailConfiguration)
-router.put("/email-config/:id", upsertEmailConfig);
-router.post("/test-email", sendTestEmail);
+router.get('/email-config',verifyJwtToken,getEmailConfiguration)
+router.put("/email-config/:id",verifyJwtToken, upsertEmailConfig);
+router.post("/test-email",verifyJwtToken, sendTestEmail);
 
 
 

@@ -1,8 +1,12 @@
 import express from 'express';
-import { getAllSEO, updateSEO } from '../../controllers/seo.controller.js';
+import { createSEO, deleteSEO, getSEO, updateSEO } from '../../controllers/seo.controller.js';
+import verifyJwtToken from '../../middlewares/verifyJwtToken.js';
 
 const router = express.Router();
 
-router.get('/get-all-seo', getAllSEO); // Get all SEO entries
-router.post('/update-seo', updateSEO); // Update a SEO entry
+router.get('/get',verifyJwtToken, getSEO);
+router.post('/create',verifyJwtToken, createSEO);
+router.put('/update/:id',verifyJwtToken, updateSEO);
+router.delete('/delete/:id',verifyJwtToken, deleteSEO);
+
 export default router;

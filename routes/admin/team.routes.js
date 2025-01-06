@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/add-team',verifyJwtToken,upload.single('image'),addTeam);
 router.get('/all-team',verifyJwtToken,getAllTeam)
-router.put('/update-team/:id',upload.single('image'),updateTeam)
-router.delete('/delete-team/:id',deleteTeamMember)
+router.put('/update-team/:id',verifyJwtToken,upload.single('image'),updateTeam)
+router.delete('/delete-team/:id',verifyJwtToken,deleteTeamMember)
 
 export default router;
