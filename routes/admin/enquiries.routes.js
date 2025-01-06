@@ -1,5 +1,6 @@
 import express from "express";
 import { deleteEnquiry, exportEnquiries, getAllEnquiries, getEnquirybyId, updateEnquiry } from "../../controllers/enquiries.controller.js";
+import verifyJwtToken from "../../middlewares/verifyJwtToken.js";
 
 
 const router = express.Router();
@@ -8,11 +9,11 @@ const router = express.Router();
 
 
 
-router.get("/get-all-enquiries", getAllEnquiries);
-router.get("/get-enquiry/:id", getEnquirybyId);
-router.patch("/update-status/:id", updateEnquiry);
-router.delete("/delete-enquiry/:id", deleteEnquiry);
-router.get("/export-enquiry", exportEnquiries);
+router.get("/get-all-enquiries",verifyJwtToken, getAllEnquiries);
+router.get("/get-enquiry/:id",verifyJwtToken,  getEnquirybyId);
+router.patch("/update-status/:id", verifyJwtToken, updateEnquiry);
+router.delete("/delete-enquiry/:id",verifyJwtToken,  deleteEnquiry);
+router.get("/export-enquiry", verifyJwtToken, exportEnquiries);
 
 
 
