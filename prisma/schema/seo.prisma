@@ -4,26 +4,23 @@ model SEO {
   updatedAt   DateTime @updatedAt
 
   // Basic SEO fields
-  pageTitle   String   @db.VarChar(100) // The actual page title
-  title       String   @db.VarChar(60)  // SEO meta title
-  description String   @db.VarChar(160) // Recommended length for meta descriptions
-  keywords    String?  @db.VarChar(200) // Optional, as it's less important for modern SEO
+  pageTitle   String   @db.VarChar(100) @unique 
+  title       String   @db.VarChar(60) 
+  description String   @db.VarChar(160) 
+  keywords    String?  @db.VarChar(200) 
   
   // Open Graph fields
-  ogTitle     String?  @db.VarChar(95)  // Facebook recommends 95 characters
+  ogTitle     String?  @db.VarChar(95)  
   ogDescription String? @db.VarChar(200)
-  ogImage     String?  @db.Text         // URL to the OpenGraph image
-  ogType      String?  @db.VarChar(50)  // article, website, product, etc.
+  ogImage     String?  @db.Text      
+  ogType      String?  @db.VarChar(50)
   
   // Twitter Card fields
-  twitterCard String?  @db.VarChar(20)  // summary, summary_large_image, app, player
+  twitterCard String?  @db.VarChar(20) 
   twitterTitle String? @db.VarChar(70)
   twitterDescription String? @db.VarChar(200)
-  twitterImage String? @db.Text         // URL to the Twitter card image
+  twitterImage String? @db.Text   
 
-  // Relations (example - uncomment and modify as needed)
-  // page        Page     @relation(fields: [pageId], references: [id])
-  // pageId      String   @unique // One-to-one relation with Page
 
   // Indexing
   @@index([pageTitle])
