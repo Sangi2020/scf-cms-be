@@ -26,14 +26,12 @@ export const createDocument = async (req, res) => {
   try {
     // Use upsert to create or update the document
     const document = await prisma.documents.upsert({
-      where: { id: id || "" },
+      where: { type: type },
       update: {
         title: title,
         content: content,
-        type: type.toUpperCase(),
       },
       create: {
-        id: id || undefined,
         title: title,
         content: content,
         type: type.toUpperCase(),
