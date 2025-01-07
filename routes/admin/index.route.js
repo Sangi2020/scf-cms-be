@@ -16,6 +16,7 @@ import notificationRoutes from "./notification.routes.js";
 import documentRoutes from "./document.routes.js"
 import userRoutes from "./user.routes.js"
 import seoRoutes from "./seo.routes.js"
+import settingRoutes from "./settings.routes.js"
 
 
 
@@ -37,6 +38,7 @@ router.use('/document', documentRoutes)
 router.use('/users', userRoutes)
 router.use("/stats", statRoutes);
 router.use("/seo",seoRoutes)
+router.use("/settings/",settingRoutes)
 
 
 export default router;
