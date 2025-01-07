@@ -13,7 +13,7 @@ const validTypes = ['PRIVACY', 'TERMS', 'DISCLAIMER'];
 
 
 export const createDocument = async (req, res) => {
-  const { id, title, content, type } = req.body;
+  const { title, content, type } = req.body;
 
   if (!title || !content || !type) {
     return res.status(400).json({ error: "Title, content, and type are required." });
@@ -53,7 +53,6 @@ export const createDocument = async (req, res) => {
 
 export const getDocumentByType = async (req, res) => {
   const { type } = req.params;
-console.log(type,"typeee");
 
   if (!type) {
     return res.status(400).json({ error: "Document type is required." });
