@@ -177,3 +177,57 @@ export const deleteUser = async (req, res) => {
         });
     }
 }
+
+
+
+export const getProfile = async (req, res) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.user.id, 
+        },
+      });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      res.status(200).json({
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+  // Controller to update user profile
+  export const updateProfile = async (req, res) => {
+    const { name } = req.body; 
+    if (!name) {
+      return res.status(400).json({ message: 'Name is required' });
+    }
+  
+    try {
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: req.user.id,
+        },
+        data: {
+          name, // Only update the name
+        },
+      });
+  
+      res.status(200).json({
+        message: 'Profile updated successfully',
+        user: {
+          name: updatedUser.name,
+        },
+      });
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };

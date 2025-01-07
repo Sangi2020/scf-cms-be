@@ -62,6 +62,8 @@ export const login = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
+    console.log(req.body);
+    
     const email = req.user.email;
 
     // Ensure all fields are provided
