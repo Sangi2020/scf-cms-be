@@ -38,7 +38,7 @@ router.use('/document', documentRoutes)
 router.use('/users', userRoutes)
 router.use("/stats", statRoutes);
 router.use("/seo",seoRoutes)
-router.use("/settings/",settingRoutes)
+router.use("/settings",settingRoutes)
 
 
 export default router;

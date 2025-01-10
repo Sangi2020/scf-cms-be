@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Testimonial routes
 router.post("/testimonial", verifyJwtToken, createTestimonial);
-router.get("/testimonials", getAllTestimonials);
+router.get("/testimonials", verifyJwtToken,getAllTestimonials);
 router.put("/testimonial/:id", verifyJwtToken, updateTestimonial);
 router.delete("/testimonial/:id", verifyJwtToken, deleteTestimonial);
 

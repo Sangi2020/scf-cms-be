@@ -62,7 +62,6 @@ export const login = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmNewPassword } = req.body;
-    console.log(req.body);
     
     const email = req.user.email;
 
@@ -201,7 +200,7 @@ export const forgotPassword = async (req, res) => {
         }
         // send otp to user
         const message = `Your OTP is ${otp}. Please enter it to reset your password.`;
-        console.log(message)
+        // console.log(message)
 
         // await sendEmail(user.email, message);
 
