@@ -17,6 +17,7 @@ import documentRoutes from "./document.routes.js"
 import userRoutes from "./user.routes.js"
 import seoRoutes from "./seo.routes.js"
 import settingRoutes from "./settings.routes.js"
+import companySettingRoutes from "./companySetting.routes.js"
 
 
 
@@ -39,6 +40,7 @@ router.use('/users', userRoutes)
 router.use("/stats", statRoutes);
 router.use("/seo",seoRoutes)
 router.use("/settings",settingRoutes)
+router.use("/company",companySettingRoutes)
 
 
 export default router;
