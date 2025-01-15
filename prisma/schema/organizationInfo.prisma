@@ -1,0 +1,17 @@
+model PhoneNumber {
+    id          String      @id @default(uuid())
+    countryCode String      @db.VarChar(5)
+    localNumber String      @db.VarChar(20)
+
+    organizations Organization[] @relation("OrganizationPhones")
+}
+
+model Organization {
+    id          String      @id @default(uuid())
+    emails      String?    @unique  // Allow multiple emails
+    phoneNumbers PhoneNumber[] @relation("OrganizationPhones")
+    location    String?
+    logoImage   String?
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+}
