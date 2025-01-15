@@ -19,7 +19,7 @@ model Testimonial {
   text      String   @db.Text
   author    String
   position  String
-  rating    Int      @db.Int
+  rating    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -28,11 +28,11 @@ model Catalogue {
   id          String   @id @default(uuid())
   title       String
   description String   @db.Text
-  image       String // URL/path to catalogue image
-  file        String? // URL/path to downloadable PDF/document
-  category    String? // Optional category/type of catalogue
+  image       String
+  file        String?
+  category    String?
   isActive    Boolean  @default(true)
-  order       Int      @db.Int
+  order       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -43,9 +43,9 @@ model Catalogue {
 
 model Documents {
   id        String   @id @default(uuid())
-  title     String // Title of the document (e.g., Privacy & Policy, Terms, Disclaimer)
-  content   String // Content of the document (this will store the HTML or text from React Quill)
-  type      String   @unique // value (Privacy, Terms, Disclaimer)
-  createdAt DateTime @default(now()) // Timestamp when the document was created
-  updatedAt DateTime @updatedAt // Timestamp when the document was last updated
+  title     String
+  content   String
+  type      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
