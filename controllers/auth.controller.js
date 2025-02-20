@@ -28,19 +28,22 @@ export const login = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ message: "Invalid email or password" });
+            return res.status(401).json({ message: "Invalid email or password" });
         }
 
         // Check if the password matches
         const isPasswordCorrect = await argon2.verify(user.password, password);
 
         if (!isPasswordCorrect) {
-            return res.status(400).json({ message: "Invalid email or password" });
+            return res.status(401).json({ message: "Invalid email or password" });
         }
 
         // Generate a JWT token for the user
         const token = generateJwtToken(user);
 
+        if (!token) {
+            return res.status(401).json({ message: "Authentication failed" });
+        }
         // Respond with the JWT token and user details
         return res.status(200).json({
             message: 'Login successful',
