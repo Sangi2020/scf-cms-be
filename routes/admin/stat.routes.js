@@ -27,7 +27,7 @@ router.get('/total-blogs',totalBlogs)
 router.get('/enquiries/last-7-days',enquiryStats)
 
 
-router.get('/total-counts',totalCounts)
+router.get('/',totalCounts)
 
 
 
