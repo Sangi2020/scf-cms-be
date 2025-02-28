@@ -13,8 +13,7 @@ import { emailTemplates } from "../helpers/email.js";
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
-
-    // Ensure all fields are provided
+    // Ensure all fields are provided    
     if (!email || !password) {
         return res.status(400).json({ message: "Please provide all the required fields" });
     }
@@ -28,14 +27,14 @@ export const login = async (req, res) => {
         });
 
         if (!user) {
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(401).json({ message: "Invalid email and password" });
         }
 
         // Check if the password matches
         const isPasswordCorrect = await argon2.verify(user.password, password);
 
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ message: "Invalid email or password" });
+        if (!isPasswordCorrect ) {
+            return res.status(401).json({ message: "Incorrect password" });
         }
 
         // Generate a JWT token for the user
