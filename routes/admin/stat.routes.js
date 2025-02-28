@@ -28,7 +28,7 @@ router.get('/total-blogs',verifyJwtToken,totalBlogs)
 router.get('/enquiries/last-7-days',verifyJwtToken,enquiryStats)
 
 
-router.get('/',verifyJwtToken,totalCounts)
+router.get('/total-counts',verifyJwtToken,totalCounts)
 
 
 
