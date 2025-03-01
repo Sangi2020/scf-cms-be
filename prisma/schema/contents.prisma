@@ -44,7 +44,11 @@ model Catalogue {
 model Documents {
   id        String   @id @default(uuid())
   title     String
+<<<<<<< HEAD
   content   String   @db.NVarChar(max)
+=======
+  content   String   @db.NVarChar(max) // Use NVarChar(max) for SQL Server
+>>>>>>> b3ac05b1542f26d5edd1332e34ab612eb40e4009
   type      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
