@@ -1,0 +1,20 @@
+model DimClient {
+  ClientID  Int       @id(map: "PK__DimClien__E67E1A048ED458B6") @default(autoincrement())
+  Name      String?   @db.NVarChar(100)
+  Email     String?   @db.NVarChar(100)
+  Phone     String?   @db.NVarChar(50)
+  Address   String?   @db.NVarChar(255)
+  Industry  String?   @db.NVarChar(100)
+  CreatedAt DateTime? @default(now(), map: "DF__DimClient__Creat__4959E263") @db.DateTime
+  UpdatedAt DateTime? @default(now(), map: "DF__DimClient__Updat__4A4E069C") @db.DateTime
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B61AFE72401") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}

@@ -81,3 +81,63 @@ export const getDocumentByType = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error. Failed to fetch document." });
   }
 };
+
+
+export const getPrivacyPolicy = async (req, res) => {
+  try {
+    const document = await prisma.documents.findFirst({
+      where: { type: "PRIVACY" }, // Assuming "PRIVACY" is the type for privacy policy
+    });
+
+    if (!document) {
+      return res.status(404).json({ error: "Privacy policy not found." });
+    }
+
+    return res.status(200).json({
+      message: "Privacy policy retrieved successfully.",
+      document,
+    });
+  } catch (error) {
+    console.error("Error fetching privacy policy:", error);
+    return res.status(500).json({ error: "Internal Server Error. Failed to fetch privacy policy." });
+  }
+};
+
+export const getTermsAndConditions = async (req, res) => {
+  try {
+    const document = await prisma.documents.findFirst({
+      where: { type: "TERMS" }, // Assuming "TERMS" is the type for terms & conditions
+    });
+
+    if (!document) {
+      return res.status(404).json({ error: "Terms and conditions not found." });
+    }
+
+    return res.status(200).json({
+      message: "Terms and conditions retrieved successfully.",
+      document,
+    });
+  } catch (error) {
+    console.error("Error fetching terms and conditions:", error);
+    return res.status(500).json({ error: "Internal Server Error. Failed to fetch terms and conditions." });
+  }
+};
+export const getDesclaimer = async (req, res) => {
+  try {
+    const document = await prisma.documents.findFirst({
+      where: { type: "DISCLAIMER" }, 
+    });
+
+    if (!document) {
+      return res.status(404).json({ error: "Desclaimer not found." });
+    }
+
+    return res.status(200).json({
+      message: "Desclaimer retrieved successfully.",
+      document,
+    });
+  } catch (error) {
+    console.error("Error fetching Desclaimer:", error);
+    return res.status(500).json({ error: "Internal Server Error. Failed to fetch Desclaimer." });
+  }
+};
