@@ -5,7 +5,7 @@ model Blog {
   date      DateTime
   image     String
   excerpt   String   @db.Text
-  content   String   @db.Text
+  content   String   @db.NVarChar(max)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
