@@ -4,41 +4,41 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 // Create a new social media entry
-// export const createSocial = async (req, res) => {
-//     const { platform, url, isActive } = req.body;
+export const createSocial = async (req, res) => {
+    const { platform, url, isActive } = req.body;
 
-//     // Only URL is required now
-//     if (!url) {
-//         return res.status(400).json({
-//             success: false,
-//             message: "Please provide the required URL field"
-//         });
-//     }
+    // Only URL is required now
+    if (!url) {
+        return res.status(400).json({
+            success: false,
+            message: "Please provide the required URL field"
+        });
+    }
 
-//     try {
-//         const social = await prisma.social.create({
-//             data: {
-//                 id: uuidv4(),
-//                 platform: platform || null,
-//                 url,
-//                 isActive: isActive !== undefined ? isActive : true
-//             }
-//         });
+    try {
+        const social = await prisma.social.create({
+            data: {
+                id: uuidv4(),
+                platform: platform || null,
+                url,
+                isActive: isActive !== undefined ? isActive : true
+            }
+        });
 
-//         return res.status(201).json({
-//             success: true,
-//             message: "Social media entry created successfully",
-//             data: social
-//         });
+        return res.status(201).json({
+            success: true,
+            message: "Social media entry created successfully",
+            data: social
+        });
 
-//     } catch (error) {
-//         console.error("Error creating social media entry:", error);
-//         return res.status(500).json({
-//             success: false,
-//             message: "Something went wrong while creating the social media entry"
-//         });
-//     }
-// };
+    } catch (error) {
+        console.error("Error creating social media entry:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong while creating the social media entry"
+        });
+    }
+};
 
 // Get all social media entries
 export const getAllSocials = async (req, res) => {
