@@ -75,7 +75,7 @@ export const getAllBlogs = async (req, res) => {
 export const updateBlog = async (req, res) => {
     const { id } = req.params;
     const new_data = req.body;
-
+console.log(new_data,"dataa")
     if (!new_data.title || !new_data.author || !new_data.date || !new_data.excerpt || !new_data.content || new_data.isPremium === undefined) {
         return res.status(400).json({
             success: false,
@@ -84,8 +84,8 @@ export const updateBlog = async (req, res) => {
     }
 
     new_data.date = new Date(new_data.date);
-    new_data.isPremium = Boolean(new_data.isPremium); 
-
+    new_data.isPremium = new_data.isPremium === 'true' || new_data.isPremium === true;
+console.log(typeof new_data.isPremium,"isPremium");
     try {
         const existingBlog = await prisma.blog.findUnique({
             where: { id }
