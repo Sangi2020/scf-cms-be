@@ -4,12 +4,12 @@ import {deleteImageFromCloudinary, imageUploadToCloudinary} from "../helpers/ima
 
 
 export const createBlog = async (req, res) => {
-    const { title, author, date, excerpt, content } = req.body;
+    const { title, author, date, excerpt, content, isPremium } = req.body;
     if (!req.file) {
         return res.status(400).json({ message: 'No image provided', success: false });
     }
 
-    if (!title || !author || !date || !excerpt || !content) {
+    if (!title || !author || !date || !excerpt || !content || isPremium === undefined) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
@@ -29,6 +29,7 @@ export const createBlog = async (req, res) => {
                 image: result.secure_url,
                 excerpt,
                 content: content.toString(), // Ensure content is stored as a string
+                isPremium: Boolean(isPremium) // Ensure isPremium is stored as Boolean
             }
         });
 
@@ -75,7 +76,7 @@ export const updateBlog = async (req, res) => {
     const { id } = req.params;
     const new_data = req.body;
 
-    if (!new_data.title || !new_data.author || !new_data.date || !new_data.excerpt || !new_data.content) {
+    if (!new_data.title || !new_data.author || !new_data.date || !new_data.excerpt || !new_data.content || new_data.isPremium === undefined) {
         return res.status(400).json({
             success: false,
             message: "Please provide all required fields"
@@ -83,6 +84,7 @@ export const updateBlog = async (req, res) => {
     }
 
     new_data.date = new Date(new_data.date);
+    new_data.isPremium = Boolean(new_data.isPremium); 
 
     try {
         const existingBlog = await prisma.blog.findUnique({
@@ -112,7 +114,7 @@ export const updateBlog = async (req, res) => {
             data: {
                 ...new_data,
                 content: new_data.content.toString(), // Ensure content is stored as a string
-                updatedAt: new Date()
+                // No need to manually set updatedAt as it's handled by Prisma's @updatedAt decorator
             }
         });
 
