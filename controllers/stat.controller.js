@@ -390,13 +390,13 @@ export const totalBlogs = async (req, res) => {
         });
     }
 };
-
 export const totalUser = async (req, res) => {
     try {
-        const totaluser = await prisma.user.count();
+        const totalUser = await prisma.user.count();
+        console.log(totalUser, "user count")
         return res.status(200).json({
             success: true,
-            data: totaluser,
+            data: totalUser,
         });
     } catch (error) {
         console.error("Error fetching total Users count:", error);
@@ -408,10 +408,10 @@ export const totalUser = async (req, res) => {
 };
 export const totalFaq = async (req, res) => {
     try {
-        const totalfaq = await prisma.fAQ.count();
+        const totalFaq = await prisma.fAQ.count();
         return res.status(200).json({
             success: true,
-            data: totalfaq,
+            data: totalFaq,
         });
     } catch (error) {
         console.error("Error fetching total Faq count:", error);
@@ -421,8 +421,6 @@ export const totalFaq = async (req, res) => {
         });
     }
 };
-
-
 export const enquiryStats = async (req, res) => {
     try {
         // Get the current date and calculate 7 days ago
@@ -488,13 +486,10 @@ export const totalCounts = async (req, res) => {
 
             // Blogs
             prisma.blog.count(),
-
-            // Faq
-            prisma.fAQ.count(),
-
             //Users
             prisma.user.count(),
-
+            // Faq
+            prisma.fAQ.count(),
             // Testimonials
             prisma.testimonial.count(),
 
