@@ -21,17 +21,17 @@ export const countryAnalytics = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No data found for country analytics.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No data found for country analytics.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching country analytics data:', error);
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             message: 'Failed to fetch country analytics data.'
         });
     }
@@ -47,18 +47,18 @@ export const activeUsers = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No active users data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No active users data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching active users:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch active users.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch active users.'
         });
     }
 };
@@ -73,18 +73,18 @@ export const engagedSessions = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No engaged sessions data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No engaged sessions data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching engaged sessions:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch engaged sessions.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch engaged sessions.'
         });
     }
 };
@@ -99,18 +99,18 @@ export const cityStats = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No city statistics found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No city statistics found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching city stats:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch city-wise stats.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch city-wise stats.'
         });
     }
 };
@@ -125,18 +125,18 @@ export const totalPageViews = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No page view data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No page view data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching page views:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch total page views.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch total page views.'
         });
     }
 };
@@ -151,18 +151,18 @@ export const bounceRate = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No bounce rate data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No bounce rate data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching bounce rate:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch bounce rate.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch bounce rate.'
         });
     }
 };
@@ -177,18 +177,18 @@ export const pageViewsByPage = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No page-wise view data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No page-wise view data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching page views by page:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch page views by page.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch page views by page.'
         });
     }
 };
@@ -212,18 +212,18 @@ export const fullPageData = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No full page data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No full page data found.'
             });
         }
 
         res.json({ success: true, data: result });
     } catch (error) {
         console.error('Error fetching full page data:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch full page data.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch full page data.'
         });
     }
 };
@@ -243,9 +243,9 @@ export const trafficSources = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No traffic sources data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No traffic sources data found.'
             });
         }
 
@@ -254,11 +254,11 @@ export const trafficSources = async (req, res) => {
             channel: item.sessionDefaultChannelGroup,
             sessions: parseInt(item.sessions),
             users: parseInt(item.totalUsers)
-        })).filter(item => 
+        })).filter(item =>
             // Include all major traffic channels
             [
                 'Organic Search',
-                'Paid Search', 
+                'Paid Search',
                 'Direct',
                 'Referral',
                 'Social',
@@ -280,8 +280,8 @@ export const trafficSources = async (req, res) => {
         // Sort by number of sessions descending
         finalData.sort((a, b) => b.sessions - a.sessions);
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             data: finalData,
             summary: {
                 totalSessions,
@@ -290,9 +290,9 @@ export const trafficSources = async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching traffic sources data:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch traffic sources data.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch traffic sources data.'
         });
     }
 };
@@ -309,9 +309,9 @@ export const sessionDurationDistribution = async (req, res) => {
         );
 
         if (!result?.length) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'No session duration data found.' 
+            return res.status(404).json({
+                success: false,
+                message: 'No session duration data found.'
             });
         }
 
@@ -327,9 +327,9 @@ export const sessionDurationDistribution = async (req, res) => {
         res.json({ success: true, data: formattedData });
     } catch (error) {
         console.error('Error fetching session duration data:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Failed to fetch session duration data.' 
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch session duration data.'
         });
     }
 };
@@ -376,161 +376,205 @@ export const totalNewsletterSubscribers = async (req, res) => {
 
 export const totalBlogs = async (req, res) => {
     try {
-      const totalBlogs = await prisma.blog.count();
-  
-      return res.status(200).json({
-        success: true,
-        data: totalBlogs,
-      });
+        const totalBlogs = await prisma.blog.count();
+
+        return res.status(200).json({
+            success: true,
+            data: totalBlogs,
+        });
     } catch (error) {
-      console.error("Error fetching total blog count:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal Server Error"
-      });
+        console.error("Error fetching total blog count:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
     }
-  };
+};
 
-
-
-  export const enquiryStats = async (req, res) => {
+export const totalUser = async (req, res) => {
     try {
-      // Get the current date and calculate 7 days ago
-      const today = new Date();
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(today.getDate() - 7);
-  
-      // Fetch enquiries created in the last 7 days
-      const enquiries = await prisma.enquiries.findMany({
-        where: {
-          createdAt: {
-            gte: sevenDaysAgo,
-          },
-        },
-      });
-  
-      const groupedData = {};
-      enquiries.forEach((enquiry) => {
-        const date = enquiry.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-        groupedData[date] = (groupedData[date] || 0) + 1;
-      });
-  
-      // Create chart-compatible data
-      const chartData = [["Date", "Enquiries"]];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date();
-        date.setDate(today.getDate() - i);
-        const formattedDate = date.toISOString().split("T")[0];
-        chartData.push([formattedDate, groupedData[formattedDate] || 0]);
-      }
-  
-      res.json(chartData.reverse());
+        const totaluser = await prisma.user.count();
+        return res.status(200).json({
+            success: true,
+            data: totaluser,
+        });
     } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "Failed to fetch data" });
+        console.error("Error fetching total Users count:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
     }
-  }
+};
+export const totalFaq = async (req, res) => {
+    try {
+        const totalfaq = await prisma.fAQ.count();
+        return res.status(200).json({
+            success: true,
+            data: totalfaq,
+        });
+    } catch (error) {
+        console.error("Error fetching total Faq count:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
 
 
-  export const totalCounts = async (req, res) => {
+export const enquiryStats = async (req, res) => {
+    try {
+        // Get the current date and calculate 7 days ago
+        const today = new Date();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(today.getDate() - 7);
+
+        // Fetch enquiries created in the last 7 days
+        const enquiries = await prisma.enquiries.findMany({
+            where: {
+                createdAt: {
+                    gte: sevenDaysAgo,
+                },
+            },
+        });
+
+        const groupedData = {};
+        enquiries.forEach((enquiry) => {
+            const date = enquiry.createdAt.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+            groupedData[date] = (groupedData[date] || 0) + 1;
+        });
+
+        // Create chart-compatible data
+        const chartData = [["Date", "Enquiries"]];
+        for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(today.getDate() - i);
+            const formattedDate = date.toISOString().split("T")[0];
+            chartData.push([formattedDate, groupedData[formattedDate] || 0]);
+        }
+
+        res.json(chartData.reverse());
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).json({ error: "Failed to fetch data" });
+    }
+}
+
+
+export const totalCounts = async (req, res) => {
     try {
         const [
-          totalClients,
-          activeClients,
-          totalBlogs,
-          totalTestimonials,
-          totalCatalogues,
-          activeCatalogues,
-          unreadEnquiries,
-          totalEnquiries,
-          totalNewsletterSubscribers,
-          unreadNotifications,
-          activeSocialLinks,
-          activeTeamMembers
+            totalClients,
+            activeClients,
+            totalBlogs,
+            totalUser,
+            totalFaq,
+            totalTestimonials,
+            totalCatalogues,
+            activeCatalogues,
+            unreadEnquiries,
+            totalEnquiries,
+            totalNewsletterSubscribers,
+            unreadNotifications,
+            activeSocialLinks,
+            activeTeamMembers
         ] = await Promise.all([
-          // Clients
-          prisma.client.count(),
-          prisma.client.count({
-            where: { isActive: true }
-          }),
-    
-          // Blogs
-          prisma.blog.count(),
-    
-          // Testimonials
-          prisma.testimonial.count(),
-    
-          // Catalogues
-          prisma.catalogue.count(),
-          prisma.catalogue.count({
-            where: { isActive: true }
-          }),
-    
-          // Enquiries
-          prisma.enquiries.count({
-            where: { status: "unread" }
-          }),
-          prisma.enquiries.count(),
-    
-          // Newsletter Subscribers
-          prisma.newsletter.count(),
-    
-          // Unread Notifications
-          prisma.notification.count({
-            where: { isRead: false }
-          }),
-    
-          // Active Social Links
-          prisma.social.count({
-            where: { isActive: true }
-          }),
-    
-          // Active Team Members
-          prisma.team.count({
-            where: { isActive: true }
-          })
+            // Clients
+            prisma.client.count(),
+            prisma.client.count({
+                where: { isActive: true }
+            }),
+
+            // Blogs
+            prisma.blog.count(),
+
+            // Faq
+            prisma.fAQ.count(),
+
+            //Users
+            prisma.user.count(),
+
+            // Testimonials
+            prisma.testimonial.count(),
+
+            // Catalogues
+            prisma.catalogue.count(),
+            prisma.catalogue.count({
+                where: { isActive: true }
+            }),
+
+            // Enquiries
+            prisma.enquiries.count({
+                where: { status: "unread" }
+            }),
+            prisma.enquiries.count(),
+
+            // Newsletter Subscribers
+            prisma.newsletter.count(),
+
+            // Unread Notifications
+            prisma.notification.count({
+                where: { isRead: false }
+            }),
+
+            // Active Social Links
+            prisma.social.count({
+                where: { isActive: true }
+            }),
+
+            // Active Team Members
+            prisma.team.count({
+                where: { isActive: true }
+            })
         ]);
-    
+
         res.json({
-          success: true,
-          counts: {
-            clients: {
-              total: totalClients,
-              active: activeClients
-            },
-            blogs: {
-              total: totalBlogs
-            },
-            testimonials: {
-              total: totalTestimonials
-            },
-            catalogues: {
-              total: totalCatalogues,
-              active: activeCatalogues
-            },
-            enquiries: {
-              total: totalEnquiries,
-              unread: unreadEnquiries
-            },
-            newsletter: {
-              subscribers: totalNewsletterSubscribers
-            },
-            notifications: {
-              unread: unreadNotifications
-            },
-            social: {
-              active: activeSocialLinks
-            },
-            team: {
-              active: activeTeamMembers
+            success: true,
+            counts: {
+                clients: {
+                    total: totalClients,
+                    active: activeClients
+                },
+                blogs: {
+                    total: totalBlogs
+                },
+                users: {
+                    total: totalUser
+                },
+                faqs: {
+                    total: totalFaq
+                },
+                testimonials: {
+                    total: totalTestimonials
+                },
+                catalogues: {
+                    total: totalCatalogues,
+                    active: activeCatalogues
+                },
+                enquiries: {
+                    total: totalEnquiries,
+                    unread: unreadEnquiries
+                },
+                newsletter: {
+                    subscribers: totalNewsletterSubscribers
+                },
+                notifications: {
+                    unread: unreadNotifications
+                },
+                social: {
+                    active: activeSocialLinks
+                },
+                team: {
+                    active: activeTeamMembers
+                }
             }
-          }
         });
-      } catch (error) {
+    } catch (error) {
         console.error("Error fetching counts:", error);
         res.status(500).json({
-          success: false,
-          error: "Failed to fetch counts"
+            success: false,
+            error: "Failed to fetch counts"
         });
-      }
-  }
+    }
+}
