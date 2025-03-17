@@ -81,7 +81,7 @@ export const getAllEnquiries = async (req, res) => {
         lte: new Date(endDate),
       };
     }
-
+    const totalEnquiryCount = await prisma.enquiries.count()
     // Get total count for pagination
     const totalCount = await prisma.enquiries.count({
       where: whereClause,
@@ -100,6 +100,7 @@ export const getAllEnquiries = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Enquiries fetched successfully",
+      totalEnquiryCount,
       enquiries,
       pagination: {
         total: totalCount,
